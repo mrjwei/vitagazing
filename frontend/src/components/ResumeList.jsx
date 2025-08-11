@@ -24,6 +24,17 @@ const ResumeList = ({ resumes, setResumes, setEditingResume }) => {
           <p>{resume.lastname}</p>
           <p>{resume.email}</p>
           <p>{resume.phone}</p>
+          <p>{resume.summary}</p>
+          {resume.workExperiences.map((w, i) => {
+            return (
+              <div key={`${w.companyName}${i}`}>
+                <p>{w.companyName}</p>
+                <p>{w.startDate}</p>
+                <p>{w.endDate}</p>
+                <p>{w.responsibility}</p>
+              </div>
+            )
+          })}
           <div className="mt-2">
             <button
               onClick={() => setEditingResume(resume)}
