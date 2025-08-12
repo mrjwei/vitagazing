@@ -35,6 +35,16 @@ const ResumeList = ({ resumes, setResumes, setEditingResume }) => {
               </div>
             )
           })}
+          {resume.educations.map((edu, i) => {
+            return (
+              <div key={`${edu.institution}${i}`}>
+                <p>{edu.degree}</p>
+                <p>{edu.institution}</p>
+                <p>{edu.startDate}</p>
+                <p>{edu.endDate}</p>
+              </div>
+            )
+          })}
           <div className="mt-2">
             <button
               onClick={() => setEditingResume(resume)}
