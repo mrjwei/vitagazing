@@ -71,7 +71,14 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
   }
 
   const handleDeleteWorkExperience = (e) => {
-    const updatedWorkExperiences = formData.workExperiences.filter(w => w.companyName !== e.target.dataset.companyName && w.startDate !== e.target.dataset.startDate)
+    const updatedWorkExperiences = formData.workExperiences.filter(w => {
+      if (w.companyName && w.startDate) {
+        return  w.companyName !== e.target.dataset.companyName && w.startDate !== e.target.dataset.startDate
+      } else if (w.id) {
+        return  w.id !== e.target.id
+      }
+      return false
+    })
     setFormData({...formData, workExperiences: updatedWorkExperiences})
   }
 
@@ -141,7 +148,7 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
             <div key={w.id} className="border p-4 rounded-lg mb-4">
               <div className="flex justify-between">
                 <h3 className="font-bold text-gray-600 mb-2">Work Experience {i+1}</h3>
-                <button type="button" className="text-red-600" onClick={handleDeleteWorkExperience} data-company-name={w.companyName} data-start-date={w.startDate}>Delete</button>
+                <button type="button" className="text-red-600" onClick={handleDeleteWorkExperience} data-company-name={w.companyName} data-start-date={w.startDate} id={w.id}>Delete</button>
               </div>
               <div>
                 <label htmlFor={`${w.id}${w.companyName}`} className="block mb-2 text-gray-500">Company Name</label>
