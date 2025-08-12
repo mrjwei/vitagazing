@@ -10,6 +10,7 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
       firstname: '', lastname: '', email: '', phone: '',
       summary: '',
       workExperiences: [],
+      educations: [],
     }
   );
 
@@ -23,6 +24,7 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
           phone: editingResume.phone,
           summary: editingResume.summary,
           workExperiences: editingResume.workExperiences,
+          educations: editingResume.educations,
         }
       );
     } else {
@@ -31,6 +33,7 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
           firstname: '', lastname: '', email: '', phone: '',
           summary: '',
           workExperiences: [],
+          educations: [],
         }
       );
     }
@@ -55,6 +58,7 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
         firstname: '', lastname: '', email: '', phone: '',
         summary: '',
         workExperiences: [],
+        educations: []
       })
     } catch (error) {
       alert('Failed to save resume.')
@@ -69,6 +73,23 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
   const handleDeleteWorkExperience = (e) => {
     const updatedWorkExperiences = formData.workExperiences.filter(w => w.companyName !== e.target.dataset.companyName && w.startDate !== e.target.dataset.startDate)
     setFormData({...formData, workExperiences: updatedWorkExperiences})
+  }
+
+  const handleAddEducation = () => {
+    const newEducation = {id: uuidv4(), degree: '', institution: '', startDate: '', endDate: ''}
+    setFormData({...formData, educations: [...formData.educations, newEducation]})
+  }
+
+  const handleDeleteEducation = (e) => {
+    const updatedEducations = formData.educations.filter(edu => {
+      if (edu.institution && edu.startDate) {
+        return edu.institution !== e.target.dataset.institution && edu.startDate !== e.target.dataset.startDate
+      } else if (edu.id) {
+        return edu.id !== e.target.id
+      }
+      return false
+    })
+    setFormData({...formData, educations: updatedEducations})
   }
 
   return (
@@ -149,8 +170,35 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
       </div>
       <div>
         <h2 className="text-lg font-bold mb-2">Education</h2>
-
-        <button type="button" className=" text-blue-600 p-2 rounded">
+        {formData.educations.map((edu, i) => {
+          return (
+            <div key={edu.id} className="border p-4 rounded-lg mb-4">
+              <div className="flex justify-between">
+                <h3 className="font-bold text-gray-600 mb-2">Education {i+1}</h3>
+                <button type="button" className="text-red-600" onClick={handleDeleteEducation} data-institution={edu.institution} data-start-date={edu.startDate} id={edu.id}>Delete</button>
+              </div>
+              <div>
+                <label htmlFor={`${edu.id}${edu.degree}`} className="block mb-2 text-gray-500">Degree</label>
+                <input type="text" className="w-full mb-4 p-2 border rounded" placeholder="Degree" name={`${edu.id}${edu.degree}`} id={`${edu.id}${edu.degree}`} value={edu.degree} onChange={(e) => setFormData({ ...formData, educations: formData.educations.map(education => education.id === edu.id ? {...education, degree: e.target.value} : education)})} />
+              </div>
+              <div>
+                <label htmlFor={`${edu.id}${edu.institution}`} className="block mb-2 text-gray-500">Institution</label>
+                <input type="text" className="w-full mb-4 p-2 border rounded" placeholder="Institution" name={`${edu.id}${edu.institution}`} id={`${edu.id}${edu.institution}`} value={edu.institution} onChange={(e) => setFormData({ ...formData, educations: formData.educations.map(education => education.id === edu.id ? {...education, institution: e.target.value} : education)})} />
+              </div>
+              <div className="flex justify-between gap-4">
+                <div className="flex-1">
+                  <label htmlFor={`${edu.id}${edu.startDate}`} className="block mb-2 text-gray-500">Started From</label>
+                  <input type="date" className="w-full mb-4 p-2 border rounded" placeholder="Start Date" name={`${edu.id}${edu.startDate}`} id={`${edu.id}${edu.startDate}`} value={edu.startDate} onChange={(e) => setFormData({ ...formData, educations: formData.educations.map(education => education.id === edu.id ? {...education, startDate: e.target.value} : education)})} />
+                </div>
+                <div className="flex-1">
+                  <label htmlFor={`${edu.id}${edu.endDate}`} className="block mb-2 text-gray-500">Ended On</label>
+                  <input type="date" className="w-full mb-4 p-2 border rounded" placeholder="End Date" name={`${edu.id}${edu.endDate}`} id={`${edu.id}${edu.endDate}`} value={edu.endDate} onChange={(e) => setFormData({ ...formData, educations: formData.educations.map(education => education.id === edu.id ? {...education, endDate: e.target.value} : education)})} />
+                </div>
+              </div>
+            </div>
+          )
+        })}
+        <button type="button" className="text-blue-600 p-2 rounded" onClick={handleAddEducation}>
           Add Education
         </button>
       </div>
