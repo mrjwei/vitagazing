@@ -1,0 +1,140 @@
+.default-temp h1,
+.default-temp h2,
+.default-temp h3 {
+  @apply text-cyan-600;
+}
+.default-temp h1 {
+  @apply border-cyan-600;
+}
+
+.full-temp {
+  @apply p-10 mx-auto my-8 lg:max-w-[960px]
+}
+.full-temp h1 {
+  @apply text-4xl py-4 border-b-2;
+}
+.full-temp h2 {
+  @apply text-2xl mb-2;
+}
+.full-temp .section {
+  @apply py-6;
+}
+
+.thumbnail-temp {
+  @apply w-full h-80 overflow-hidden text-xs;
+}
+
+.default-temp.full-temp .work-experience li {
+  @apply py-2;
+}
+.default-temp.full-temp .work-experience li > div {
+  @apply gap-4;
+}
+
+.default-temp.thumbnail-temp {
+  @apply p-4;
+}
+.default-temp.thumbnail-temp h1 {
+  @apply text-lg border-b-[1px] py-2;
+}
+.default-temp.thumbnail-temp h2,
+.default-temp.thumbnail-temp h3 {
+  @apply text-base;
+}
+.default-temp.thumbnail-temp .work-experience li > div {
+  @apply gap-1;
+}
+
+.designer-temp {
+  @apply overflow-hidden;
+}
+.designer-temp .summary {
+  @apply border-b;
+}
+.designer-temp.full-temp {
+  @apply p-16;
+}
+
+.designer-temp.full-temp h1 {
+  @apply text-7xl border-none p-0;
+}
+.designer-temp.full-temp .title {
+  @apply mb-12;
+}
+.designer-temp.full-temp .shape-1 {
+  @apply w-[300px] h-[300px] bg-orange-200 top-0 left-0 -translate-x-[50%] -translate-y-[50%];
+}
+.designer-temp.full-temp .shape-2 {
+  @apply w-[80px] h-[80px] bg-orange-300 top-3/4 left-3/4 -translate-x-[50%] -translate-y-[50%];
+}
+.designer-temp.full-temp .shape-3 {
+  @apply w-[200px] h-[200px] bg-orange-300/30 top-full left-2/3 -translate-x-[50%] -translate-y-[50%];
+}
+
+.designer-temp.thumbnail-temp {
+  @apply p-8;
+}
+.designer-temp.thumbnail-temp .title {
+  @apply mb-8;
+}
+.designer-temp.thumbnail-temp h1 {
+  @apply text-3xl border-none p-0;
+}
+.designer-temp.thumbnail-temp h2 {
+  @apply text-base border-none p-0;
+}
+.designer-temp.thumbnail-temp .shape-1 {
+  @apply w-[100px] h-[100px] bg-orange-200 top-0 left-0 -translate-x-[50%] -translate-y-[50%];
+}
+.designer-temp.thumbnail-temp .shape-2 {
+  @apply w-[30px] h-[30px] bg-orange-300 top-3/4 left-3/4 -translate-x-[50%] -translate-y-[50%];
+}
+.designer-temp.thumbnail-temp .shape-3 {
+  @apply w-[60px] h-[60px] bg-orange-300/30 top-full left-2/3 -translate-x-[50%] -translate-y-[50%];
+}
+.designer-temp.thumbnail-temp .section {
+  @apply py-2;
+}
+
+.software-engineer-temp.full-temp {
+  @apply p-0;
+}
+.software-engineer-temp.full-temp h1 {
+  @apply p-10 text-5xl;
+}
+.software-engineer-temp.full-temp .content {
+  @apply p-10;
+}
+.software-engineer-temp.full-temp .section {
+  @apply p-0 mb-10;
+}
+.software-engineer-temp.full-temp .work-experience li,
+.software-engineer-temp.full-temp .education li
+{
+  @apply py-2;
+}
+.software-engineer-temp.full-temp .work-experience li > div {
+  @apply gap-4;
+}
+.software-engineer-temp.full-temp .col-span-9 {
+  @apply pl-8;
+}
+
+.software-engineer-temp.thumbnail-temp h1 {
+  @apply p-8 text-2xl;
+}
+.software-engineer-temp.thumbnail-temp .content {
+  @apply p-8;
+}
+.software-engineer-temp.thumbnail-temp .section {
+  @apply mb-4;
+}
+.software-engineer-temp.thumbnail-temp .col-span-3 {
+  @apply pr-4 col-span-4;
+}
+.software-engineer-temp.thumbnail-temp .col-span-9
+{
+  @apply pl-4 col-span-8;
+}
+
+
