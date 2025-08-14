@@ -1,68 +1,64 @@
-import { useAuth } from '../context/AuthContext';
-import axiosInstance from '../axiosConfig';
+import { Link } from "react-router-dom"
+import {PencilIcon, TrashIcon} from '@heroicons/react/24/outline';
+import { useAuth } from "../context/AuthContext"
+import axiosInstance from "../axiosConfig"
+import DefaultTemplate from "./resume-templates/DefaultTemplate"
+import { templates } from "../data"
 
 const ResumeList = ({ resumes, setResumes, setEditingResume }) => {
-  const { user } = useAuth();
+  const { user } = useAuth()
 
   const handleDelete = async (resumeId) => {
     try {
       await axiosInstance.delete(`/api/resumes/${resumeId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
-      });
-      setResumes(resumes.filter((resume) => resume._id !== resumeId));
+      })
+      setResumes(resumes.filter((resume) => resume._id !== resumeId))
     } catch (error) {
-      alert('Failed to delete resume.');
+      alert("Failed to delete resume.")
     }
-  };
+  }
 
   return (
-    <div>
-      {resumes.map((resume) => (
-        <div key={resume._id} className="bg-gray-100 p-4 mb-4 rounded shadow">
-          <h2 className="font-bold">My Resumes</h2>
-          <p>{resume.firstname}</p>
-          <p>{resume.lastname}</p>
-          <p>{resume.email}</p>
-          <p>{resume.phone}</p>
-          <p>{resume.summary}</p>
-          {resume.workExperiences.map((w, i) => {
-            return (
-              <div key={`${w.companyName}${i}`}>
-                <p>{w.companyName}</p>
-                <p>{w.startDate}</p>
-                <p>{w.endDate}</p>
-                <p>{w.responsibility}</p>
+    <div className="grid grid-cols-12 gap-8">
+      {resumes.map((resume) => {
+        const TemplateComp = templates[resume.template]?.component
+        return (
+          <div
+            key={resume._id}
+            className="col col-span-12 md:col-span-6 lg:col-span-4 flex flex-col"
+          >
+            <Link to={`/resumes/${resume._id}`} className="flex-1">
+              {TemplateComp ? <TemplateComp data={resume} size='thumbnail' /> : <DefaultTemplate data={resume} size="thumbnail" />}
+            </Link>
+            <div className="mt-4 flex justify-between items-stretch">
+              <Link to={`/resumes/${resume._id}/templates`} className="mr-2 text-violet-800 border-2 border-violet-800 px-4 py-2 rounded hover:bg-violet-800 hover:text-white hover:border-violet-800 transition-all duration-300 ease-in-out">Change Template</Link>
+              <div className="flex justify-end flex-1">
+                <button
+                  onClick={() => setEditingResume(resume)}
+                  className="mr-2 text-violet-800 px-4 py-2 rounded flex items-center gap-2 hover:bg-violet-100 transition-all duration-300 ease-in-out"
+                >
+                  <span>
+                    <PencilIcon className="size-5"/>
+                  </span>
+                  <span>Edit</span>
+                </button>
+                <button
+                  onClick={() => handleDelete(resume._id)}
+                  className="text-red-600 px-4 py-2 rounded flex items-center gap-2 hover:bg-red-50 transition-all duration-300 ease-in-out"
+                >
+                  <span>
+                    <TrashIcon className="size-5" />
+                  </span>
+                  <span>Delete</span>
+                </button>
               </div>
-            )
-          })}
-          {resume.educations.map((edu, i) => {
-            return (
-              <div key={`${edu.institution}${i}`}>
-                <p>{edu.degree}</p>
-                <p>{edu.institution}</p>
-                <p>{edu.startDate}</p>
-                <p>{edu.endDate}</p>
-              </div>
-            )
-          })}
-          <div className="mt-2">
-            <button
-              onClick={() => setEditingResume(resume)}
-              className="mr-2 bg-yellow-500 text-white px-4 py-2 rounded"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => handleDelete(resume._id)}
-              className="bg-red-500 text-white px-4 py-2 rounded"
-            >
-              Delete
-            </button>
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
-  );
-};
+  )
+}
 
-export default ResumeList;
+export default ResumeList
