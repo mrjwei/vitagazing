@@ -1,6 +1,6 @@
 import './template.css'
 
-const DesignerTemplate = ({data, size = 'full'}) => {
+const DesignerTemplate = ({data, size = 'full', customClasses = ''}) => {
   const {firstname, lastname, email, phone, summary, workExperiences, educations} = data
   let className
   if (size === 'thumbnail') {
@@ -9,7 +9,7 @@ const DesignerTemplate = ({data, size = 'full'}) => {
     className = 'full-temp'
   }
   return (
-    <div className={`designer-temp ${className} relative border rounded-lg bg-orange-100/30 h-full`}>
+    <div className={`designer-temp ${className} ${customClasses} relative border rounded-lg bg-orange-100/30 h-full`}>
       <div>
         <div className="title flex justify-between items-end relative z-10">
           {/* name */}

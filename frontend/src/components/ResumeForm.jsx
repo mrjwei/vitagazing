@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../axiosConfig';
 import {v4 as uuidv4} from 'uuid'
 
 const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) => {
+  const navigate = useNavigate()
   const { user } = useAuth();
   const [formData, setFormData] = useState(
     {
@@ -51,7 +53,9 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
         const response = await axiosInstance.post('/api/resumes', formData, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
+        const newId = response.data._id
         setResumes([...resumes, response.data])
+        navigate(`/resumes/${newId}/templates`)
       }
       setEditingResume(null)
       setFormData({
@@ -210,7 +214,7 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
         </button>
       </div>
       <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
-        {editingResume ? 'Update Resume' : 'Create Resume'}
+        {editingResume ? 'Save Changes' : 'Save & Choose Template'}
       </button>
     </form>
   );

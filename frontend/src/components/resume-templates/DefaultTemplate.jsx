@@ -1,6 +1,6 @@
 import './template.css'
 
-const DefaultTemplate = ({data, size = 'full'}) => {
+const DefaultTemplate = ({data, size = 'full', customClasses = ''}) => {
   const {firstname, lastname, email, phone, summary, workExperiences, educations} = data
   let className
   if (size === 'thumbnail') {
@@ -9,7 +9,7 @@ const DefaultTemplate = ({data, size = 'full'}) => {
     className = 'full-temp'
   }
   return (
-    <div className={`default-temp ${className} border rounded-lg h-full`}>
+    <div className={`default-temp ${className} ${customClasses} border rounded-lg h-full`}>
       <div>
         {/* name */}
         <h1 className="font-bold">{firstname} {lastname}</h1>
