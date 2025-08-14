@@ -24,6 +24,7 @@ const resumeSchema = new mongoose.Schema({
     summary: {type: String, required: true},
     workExperiences: {type: [workExperienceSchema], default: []},
     educations: {type: [eduSchema], default: []},
+    template: {type: String, enum: ['Default', 'Designer', 'Software Engineer'], default: 'Default', required: true}
 });
 
 module.exports = mongoose.model('Resume', resumeSchema);

@@ -31,8 +31,20 @@ const fetchResumes = async (req, res) => {
   }
 }
 
+const fetchResume = async (req, res) => {
+  try {
+    const resume = await Resume.findOne({_id: req.params.id, userId: req.user.id })
+    if (!resume) {
+      return res.status(404).json({ message: 'Resume not found' })
+    }
+    res.json(resume)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
 const updateResume = async (req, res) => {
-  const { firstname, lastname, email, phone, summary, workExperiences = [], educations = [] } = req.body
+  const { firstname, lastname, email, phone, summary, workExperiences = [], educations = [], template } = req.body
   try {
     const resume = await Resume.findById(req.params.id)
     if (!resume) {
@@ -45,6 +57,7 @@ const updateResume = async (req, res) => {
     resume.summary = summary || resume.summary
     resume.workExperiences = workExperiences || resume.workExperiences
     resume.educations = educations || resume.educations
+    resume.template = template || resume.template
     const updatedResume = await resume.save()
     res.json(updatedResume)
   } catch (error) {
@@ -68,6 +81,7 @@ const deleteResume = async (req, res) => {
 module.exports = {
   createResume,
   fetchResumes,
+  fetchResume,
   updateResume,
   deleteResume,
 }

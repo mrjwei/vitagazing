@@ -4,6 +4,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Resumes from './pages/Resumes';
+import ResumeDetail from './pages/ResumeDetail';
+import Templates from './pages/TemplateList';
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/resumes" element={<Resumes />} />
+        <Route path="/resumes/:resumeId" element={<ResumeDetail />} />
+        <Route path="/resumes/:resumeId/templates" element={<Templates />} />
       </Routes>
     </Router>
   );
