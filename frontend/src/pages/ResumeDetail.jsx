@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import {Link} from 'react-router-dom';
 import {useParams} from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../axiosConfig';
@@ -39,7 +40,10 @@ const ResumeDetail = () => {
     )
   }
   return (
-    <Component data={resume} size="full" />
+    <div className="container mx-auto lg:max-w-[960px]">
+      <Component data={resume} size="full" customClasses='!w-full !max-w-full' />
+      <div className="flex justify-end"><Link to={`/resumes/${resume._id}/templates`} className="text-violet-800 border-2 border-violet-800 px-4 py-2 rounded hover:bg-violet-800 hover:text-white hover:border-violet-800 transition-all duration-300 ease-in-out">Change Template</Link></div>
+    </div>
   )
 }
 

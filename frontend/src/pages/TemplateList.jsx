@@ -85,7 +85,7 @@ const TemplateList = () => {
         </div>
         <div className="flex justify-end gap-2 py-8">
           <Link
-            to='/resumes'
+            to={`/resumes/${resumeId}`}
             className="mr-2 border-violet-800 border-2 text-violet-800 px-4 py-2 rounded flex items-center gap-2 hover:bg-violet-800  hover:text-white transition-all duration-300 ease-in-out"
           >
             Cancel
