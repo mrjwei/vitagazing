@@ -31,6 +31,18 @@ const fetchResumes = async (req, res) => {
   }
 }
 
+const fetchResume = async (req, res) => {
+  try {
+    const resume = await Resume.findOne({_id: req.params.id, userId: req.user.id })
+    if (!resume) {
+      return res.status(404).json({ message: 'Resume not found' })
+    }
+    res.json(resume)
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
 const updateResume = async (req, res) => {
   const { firstname, lastname, email, phone, summary, workExperiences = [], educations = [] } = req.body
   try {
