@@ -9,7 +9,7 @@ const DefaultTemplate = ({data, size = 'full', customClasses = ''}) => {
     className = 'full-temp'
   }
   return (
-    <div className={`default-temp ${className} ${customClasses} border rounded-lg h-full`}>
+    <div className={`default-temp ${className} ${customClasses} border rounded-lg h-full bg-white`}>
       <div>
         {/* name */}
         <h1 className="font-bold">{firstname} {lastname}</h1>

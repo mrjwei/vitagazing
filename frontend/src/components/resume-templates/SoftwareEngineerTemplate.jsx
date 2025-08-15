@@ -9,7 +9,7 @@ const SoftwareEngineerTemplate = ({data, size = 'full', customClasses = ''}) => 
     className = 'full-temp'
   }
   return (
-    <div className={`software-engineer-temp ${className} ${customClasses} relative border rounded-lg h-full`}>
+    <div className={`software-engineer-temp ${className} ${customClasses} relative border rounded-lg h-full bg-white`}>
       <h1 className="font-bold bg-sky-900 text-white rounded-t-lg uppercase">{firstname} {lastname}</h1>
       <div className="content grid grid-cols-12">
         <div className="col col-span-3">

@@ -12,3 +12,6 @@ html {
 body {
   @apply min-h-screen h-full bg-stone-100;
 }
+.container {
+  @apply max-w-[960px];
+}
