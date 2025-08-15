@@ -132,6 +132,7 @@ const ResumeUpdateForm = ({ resume }) => {
               setFormData({ ...formData, firstname: e.target.value })
             }
             className="w-full mb-4 p-2 border rounded"
+            required
           />
           <input
             type="text"
@@ -141,6 +142,7 @@ const ResumeUpdateForm = ({ resume }) => {
               setFormData({ ...formData, lastname: e.target.value })
             }
             className="w-full mb-4 p-2 border rounded"
+            required
           />
         </div>
         <div className="block md:flex md:gap-4">
@@ -152,6 +154,7 @@ const ResumeUpdateForm = ({ resume }) => {
               setFormData({ ...formData, email: e.target.value })
             }
             className="w-full mb-4 p-2 border rounded"
+            required
           />
           <input
             type="tel"
@@ -161,6 +164,7 @@ const ResumeUpdateForm = ({ resume }) => {
               setFormData({ ...formData, phone: e.target.value })
             }
             className="w-full mb-4 p-2 border rounded"
+            required
           />
         </div>
       </div>
@@ -175,6 +179,7 @@ const ResumeUpdateForm = ({ resume }) => {
             setFormData({ ...formData, summary: e.target.value })
           }
           className="w-full mb-4 p-2 border rounded"
+          required
         ></textarea>
       </div>
       <div className="mb-4">
