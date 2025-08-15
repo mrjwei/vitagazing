@@ -81,6 +81,7 @@ const ResumeCreationForm = () => {
             value={formData.firstname}
             onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
             className="w-full mb-4 p-2 border rounded"
+            required
           />
           <input
             type="text"
@@ -88,6 +89,7 @@ const ResumeCreationForm = () => {
             value={formData.lastname}
             onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
             className="w-full mb-4 p-2 border rounded"
+            required
           />
         </div>
         <div className="block md:flex md:gap-4">
@@ -97,6 +99,7 @@ const ResumeCreationForm = () => {
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             className="w-full mb-4 p-2 border rounded"
+            required
           />
           <input
             type="tel"
@@ -104,12 +107,13 @@ const ResumeCreationForm = () => {
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             className="w-full mb-4 p-2 border rounded"
+            required
           />
         </div>
       </div>
       <div className="mb-4">
         <h2 className="text-lg font-bold mb-4">Summary</h2>
-        <textarea name="summary" id="summary" placeholder="Summary" value={formData.summary} onChange={(e) => setFormData({ ...formData, summary: e.target.value })} className="w-full mb-4 p-2 border rounded"></textarea>
+        <textarea name="summary" id="summary" placeholder="Summary" value={formData.summary} onChange={(e) => setFormData({ ...formData, summary: e.target.value })} className="w-full mb-4 p-2 border rounded" required></textarea>
       </div>
       <div className="mb-4">
         <h2 className="text-lg font-bold mb-4">Work Experience</h2>

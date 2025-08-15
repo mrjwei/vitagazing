@@ -20,26 +20,29 @@ const ResumeUpdateForm = ({ resume }) => {
     workExperiences,
     educations,
   } = resume
+
   const [formData, setFormData] = useState({
     firstname,
     lastname,
     email,
     phone,
     summary,
-    workExperiences,
-    educations,
+    workExperiences: workExperiences.map((w) => ({
+      ...w,
+      id: w.id || uuidv4(),
+    })),
+    educations: educations.map((e) => ({
+      ...e,
+      id: e.id || uuidv4(),
+    })),
   })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await axiosInstance.put(
-        `/api/resumes/${resume._id}`,
-        formData,
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      )
+      await axiosInstance.put(`/api/resumes/${resume._id}`, formData, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      })
       setFormData({
         firstname: "",
         lastname: "",
@@ -129,6 +132,7 @@ const ResumeUpdateForm = ({ resume }) => {
               setFormData({ ...formData, firstname: e.target.value })
             }
             className="w-full mb-4 p-2 border rounded"
+            required
           />
           <input
             type="text"
@@ -138,6 +142,7 @@ const ResumeUpdateForm = ({ resume }) => {
               setFormData({ ...formData, lastname: e.target.value })
             }
             className="w-full mb-4 p-2 border rounded"
+            required
           />
         </div>
         <div className="block md:flex md:gap-4">
@@ -149,6 +154,7 @@ const ResumeUpdateForm = ({ resume }) => {
               setFormData({ ...formData, email: e.target.value })
             }
             className="w-full mb-4 p-2 border rounded"
+            required
           />
           <input
             type="tel"
@@ -158,6 +164,7 @@ const ResumeUpdateForm = ({ resume }) => {
               setFormData({ ...formData, phone: e.target.value })
             }
             className="w-full mb-4 p-2 border rounded"
+            required
           />
         </div>
       </div>
@@ -172,6 +179,7 @@ const ResumeUpdateForm = ({ resume }) => {
             setFormData({ ...formData, summary: e.target.value })
           }
           className="w-full mb-4 p-2 border rounded"
+          required
         ></textarea>
       </div>
       <div className="mb-4">
