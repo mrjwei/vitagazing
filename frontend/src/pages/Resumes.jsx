@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '../axiosConfig';
-import ResumeForm from '../components/ResumeForm';
 import ResumeList from '../components/ResumeList';
 import { useAuth } from '../context/AuthContext';
+import Navbar from "../components/Navbar"
 
 const Resumes = () => {
   const { user } = useAuth();
   const [resumes, setResumes] = useState([]);
-  const [editingResume, setEditingResume] = useState(null);
 
   useEffect(() => {
     const fetchResumes = async () => {
@@ -25,15 +24,13 @@ const Resumes = () => {
   }, [user]);
 
   return (
-    <div className="container mx-auto p-6">
-      <ResumeForm
-        resumes={resumes}
-        setResumes={setResumes}
-        editingResume={editingResume}
-        setEditingResume={setEditingResume}
-      />
-      <ResumeList resumes={resumes} setResumes={setResumes} setEditingResume={setEditingResume} />
-    </div>
+    <>
+      <Navbar/>
+      <div className="container mx-auto px-8 py-[88px] !max-w-[1280px]">
+        <h1 className="text-3xl font-bold mt-2 mb-8">My Resumes</h1>
+        <ResumeList resumes={resumes} setResumes={setResumes} />
+      </div>
+    </>
   );
 };
 
