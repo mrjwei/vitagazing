@@ -20,26 +20,29 @@ const ResumeUpdateForm = ({ resume }) => {
     workExperiences,
     educations,
   } = resume
+
   const [formData, setFormData] = useState({
     firstname,
     lastname,
     email,
     phone,
     summary,
-    workExperiences,
-    educations,
+    workExperiences: workExperiences.map((w) => ({
+      ...w,
+      id: w.id || uuidv4(),
+    })),
+    educations: educations.map((e) => ({
+      ...e,
+      id: e.id || uuidv4(),
+    })),
   })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await axiosInstance.put(
-        `/api/resumes/${resume._id}`,
-        formData,
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      )
+      await axiosInstance.put(`/api/resumes/${resume._id}`, formData, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      })
       setFormData({
         firstname: "",
         lastname: "",
