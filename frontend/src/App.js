@@ -1,26 +1,79 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Profile from './pages/Profile';
-import Resumes from './pages/Resumes';
-import ResumeDetail from './pages/ResumeDetail';
-import Templates from './pages/TemplateList';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom"
+import Login from "./pages/Login"
+import Register from "./pages/Register"
+import Profile from "./pages/Profile"
+import Resumes from "./pages/Resumes"
+import ResumeDetail from "./pages/ResumeDetail"
+import Templates from "./pages/TemplateList"
+import ResumeCreation from "./pages/ResumeCreation"
+import ResumeUpdate from "./pages/ResumeUpdate"
+import { useAuth } from "./context/AuthContext"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 function App() {
+  const { user } = useAuth()
   return (
     <Router>
-      <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/resumes" element={<Resumes />} />
-        <Route path="/resumes/:resumeId" element={<ResumeDetail />} />
-        <Route path="/resumes/:resumeId/templates" element={<Templates />} />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute user={user}>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/resumes/new"
+          element={
+            <ProtectedRoute user={user}>
+              <ResumeCreation />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/resumes"
+          element={
+            <ProtectedRoute user={user}>
+              <Resumes />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/" element={<Navigate to="/resumes" replace />} />
+        <Route
+          path="/resumes/:resumeId/edit"
+          element={
+            <ProtectedRoute user={user}>
+              <ResumeUpdate />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/resumes/:resumeId"
+          element={
+            <ProtectedRoute user={user}>
+              <ResumeDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/resumes/:resumeId/templates"
+          element={
+            <ProtectedRoute user={user}>
+              <Templates />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App

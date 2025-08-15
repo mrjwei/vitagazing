@@ -13,7 +13,7 @@ import axiosInstance from "../axiosConfig"
 import DefaultTemplate from "./resume-templates/DefaultTemplate"
 import { templates } from "../data"
 
-const ResumeList = ({ resumes, setResumes, setEditingResume }) => {
+const ResumeList = ({ resumes, setResumes }) => {
   const { user } = useAuth()
 
   const hiddenResumeRefs = useRef({})
@@ -97,15 +97,15 @@ const ResumeList = ({ resumes, setResumes, setEditingResume }) => {
                 </span>
                 <span>Export</span>
               </button>
-              <button
-                onClick={() => setEditingResume(resume)}
+              <Link
+                to={`/resumes/${resume._id}/edit?from=/resumes`}
                 className="mr-2 text-violet-800 px-4 py-2 rounded flex items-center gap-2 hover:bg-violet-100 transition-all duration-300 ease-in-out"
               >
                 <span>
                   <PencilIcon className="size-5" />
                 </span>
                 <span>Edit</span>
-              </button>
+              </Link>
               <button
                 onClick={() => handleDelete(resume._id)}
                 className="text-red-600 px-4 py-2 rounded flex items-center gap-2 hover:bg-red-50 transition-all duration-300 ease-in-out"

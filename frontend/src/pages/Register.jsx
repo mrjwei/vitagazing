@@ -1,10 +1,19 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const navigate = useNavigate();
+
+  useEffect(() => {
+      document.body.style.backgroundImage = 'url("/bg.jpg")'
+      document.body.className = 'h-full bg-cover bg-center bg-no-repeat flex justify-center items-center'
+      return () => {
+        document.body.style.backgroundImage = ''
+        document.body.classList.remove('flex', 'justify-center', 'items-center')
+      }
+    }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,9 +27,9 @@ const Register = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20">
-      <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded">
-        <h1 className="text-2xl font-bold mb-4 text-center">Register</h1>
+    <div className="max-w-md mx-auto bg-white shadow-md rounded-lg text-gray-800">
+      <form onSubmit={handleSubmit} className="p-6">
+        <h1 className="text-2xl font-medium mb-4 text-center">Create an Account</h1>
         <input
           type="text"
           placeholder="Name"
@@ -42,10 +51,14 @@ const Register = () => {
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           className="w-full mb-4 p-2 border rounded"
         />
-        <button type="submit" className="w-full bg-green-600 text-white p-2 rounded">
-          Register
+        <button type="submit" className="w-full bg-violet-800 text-white p-2 rounded-lg">
+          Sign Up
         </button>
       </form>
+      <div className="flex items-center justify-center gap-2 bg-gray-100 p-6 rounded-b-lg border-t-[1px] border-gray-300">
+                <p className="text-gray-500">Already have an account?</p>
+                <Link to="/login" className="font-medium">Log In</Link>
+              </div>
     </div>
   );
 };

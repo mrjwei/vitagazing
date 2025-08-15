@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import axiosInstance from "../axiosConfig"
 import { templates } from "../data"
+import Navbar from "../components/Navbar"
 
 const TemplateList = () => {
   const navigate = useNavigate()
@@ -49,56 +50,60 @@ const TemplateList = () => {
     }
   }
   return (
-    <div className="container mx-auto p-10">
-      <form method="post" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-12 gap-8">
-          {Object.entries(templates).map(([k, v]) => {
-            const Component = v.component
-            return (
-              <div
-                className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between ${selected === k ? "border-violet-600 border-4" : "border-gray-200 border-2"}`}
-                key={k}
-                onClick={() => setSelected(k)}
-              >
-                <Component
-                  data={resume}
-                  size="thumbnail"
-                  customClasses="!border-0"
-                />
-                <label
+    <>
+      <Navbar/>
+      <div className="container mx-auto px-8 py-[88px]">
+        <h1 className="text-3xl font-bold mt-2 mb-8">My Resumes</h1>
+        <form method="post" onSubmit={handleSubmit}>
+          <div className="grid grid-cols-12 gap-8">
+            {Object.entries(templates).map(([k, v]) => {
+              const Component = v.component
+              return (
+                <div
+                  className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between ${selected === k ? "border-violet-600 border-4" : "border-gray-200 border-2"}`}
                   key={k}
-                  className={`flex gap-2 px-8 py-4 ${selected === k ? "bg-violet-600 text-white" : "bg-gray-100"}`}
+                  onClick={() => setSelected(k)}
                 >
-                  <input
-                    type="radio"
-                    name="template"
-                    value={k}
-                    className="block mr-2 w-6"
-                    checked={selected === k}
-                    onChange={() => setSelected(k)}
+                  <Component
+                    data={resume}
+                    size="thumbnail"
+                    customClasses="!border-0"
                   />
-                  <span className="text-lg font-semibold">{k}</span>
-                </label>
-              </div>
-            )
-          })}
-        </div>
-        <div className="flex justify-end gap-2 py-8">
-          <Link
-            to={`/resumes/${resumeId}`}
-            className="mr-2 border-violet-800 border-2 text-violet-800 px-4 py-2 rounded flex items-center gap-2 hover:bg-violet-800  hover:text-white transition-all duration-300 ease-in-out"
-          >
-            Cancel
-          </Link>
-          <button
-            type="submit"
-            className="mr-2 bg-violet-800 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-violet-900 transition-all duration-300 ease-in-out"
-          >
-            Apply
-          </button>
-        </div>
-      </form>
-    </div>
+                  <label
+                    key={k}
+                    className={`flex gap-4 px-8 py-4 ${selected === k ? "bg-violet-600 text-white" : "bg-gray-100"}`}
+                  >
+                    <input
+                      type="radio"
+                      name="template"
+                      value={k}
+                      className="block w-6"
+                      checked={selected === k}
+                      onChange={() => setSelected(k)}
+                    />
+                    <span className="text-lg font-medium">{k}</span>
+                  </label>
+                </div>
+              )
+            })}
+          </div>
+          <div className="flex justify-end gap-2 py-8">
+            <Link
+              to={`/resumes/${resumeId}`}
+              className="mr-2 border-violet-800 border-2 text-violet-800 px-4 py-2 rounded flex items-center gap-2 hover:bg-violet-800  hover:text-white transition-all duration-300 ease-in-out"
+            >
+              Cancel
+            </Link>
+            <button
+              type="submit"
+              className="mr-2 bg-violet-800 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-violet-900 transition-all duration-300 ease-in-out"
+            >
+              Apply
+            </button>
+          </div>
+        </form>
+      </div>
+    </>
   )
 }
 

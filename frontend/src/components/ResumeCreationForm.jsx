@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../axiosConfig';
 import {v4 as uuidv4} from 'uuid'
+import {PlusIcon} from '@heroicons/react/24/outline';
 
-const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) => {
+const ResumeCreationForm = () => {
   const navigate = useNavigate()
   const { user } = useAuth();
   const [formData, setFormData] = useState(
@@ -16,48 +17,14 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
     }
   );
 
-  useEffect(() => {
-    if (editingResume) {
-      setFormData(
-        {
-          firstname: editingResume.firstname,
-          lastname: editingResume.lastname,
-          email: editingResume.email,
-          phone: editingResume.phone,
-          summary: editingResume.summary,
-          workExperiences: editingResume.workExperiences,
-          educations: editingResume.educations,
-        }
-      );
-    } else {
-      setFormData(
-        {
-          firstname: '', lastname: '', email: '', phone: '',
-          summary: '',
-          workExperiences: [],
-          educations: [],
-        }
-      );
-    }
-  }, [editingResume]);
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      if (editingResume) {
-        const response = await axiosInstance.put(`/api/resumes/${editingResume._id}`, formData, {
+      const response = await axiosInstance.post('/api/resumes', formData, {
           headers: { Authorization: `Bearer ${user.token}` },
         });
-        setResumes(resumes.map((resume) => (resume._id === response.data._id ? response.data : resume)))
-      } else {
-        const response = await axiosInstance.post('/api/resumes', formData, {
-          headers: { Authorization: `Bearer ${user.token}` },
-        });
-        const newId = response.data._id
-        setResumes([...resumes, response.data])
-        navigate(`/resumes/${newId}/templates`)
-      }
-      setEditingResume(null)
+      const newId = response.data._id
+      navigate(`/resumes/${newId}/templates`)
       setFormData({
         firstname: '', lastname: '', email: '', phone: '',
         summary: '',
@@ -104,10 +71,9 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded mb-6">
-      <h1 className="text-2xl font-bold mb-4">{editingResume ? 'Update Resume' : 'Create Resume'}</h1>
-      <div>
-        <h2 className="text-lg font-bold mb-2">Personal Info</h2>
+    <form onSubmit={handleSubmit} className="bg-white p-6 md:p-8 shadow-md rounded-lg">
+      <div className="mb-4">
+        <h2 className="text-lg font-bold mb-4">Personal Info</h2>
         <div className="flex gap-4">
           <input
             type="text"
@@ -141,12 +107,12 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
           />
         </div>
       </div>
-      <div>
-        <h2 className="text-lg font-bold mb-2">Summary</h2>
+      <div className="mb-4">
+        <h2 className="text-lg font-bold mb-4">Summary</h2>
         <textarea name="summary" id="summary" placeholder="Summary" value={formData.summary} onChange={(e) => setFormData({ ...formData, summary: e.target.value })} className="w-full mb-4 p-2 border rounded"></textarea>
       </div>
-      <div>
-        <h2 className="text-lg font-bold mb-2">Work Experience</h2>
+      <div className="mb-4">
+        <h2 className="text-lg font-bold mb-4">Work Experience</h2>
         {formData.workExperiences.map((w, i) => {
           return (
             <div key={w.id} className="border p-4 rounded-lg mb-4">
@@ -175,12 +141,15 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
             </div>
           )
         })}
-        <button type="button" className="text-blue-600 p-2 rounded" onClick={handleAddWorkExperience}>
-          Add Work Experience
+        <button type="button" className="text-violet-800 flex items-center gap-1" onClick={handleAddWorkExperience}>
+          <span>
+            <PlusIcon className="size-5" />
+          </span>
+          <span>Add Work Experience</span>
         </button>
       </div>
-      <div>
-        <h2 className="text-lg font-bold mb-2">Education</h2>
+      <div className="mb-4">
+        <h2 className="text-lg font-bold mb-4">Education</h2>
         {formData.educations.map((edu, i) => {
           return (
             <div key={edu.id} className="border p-4 rounded-lg mb-4">
@@ -209,15 +178,18 @@ const ResumeForm = ({ resumes, setResumes, editingResume, setEditingResume }) =>
             </div>
           )
         })}
-        <button type="button" className="text-blue-600 p-2 rounded" onClick={handleAddEducation}>
-          Add Education
+        <button type="button" className="text-violet-800  flex items-center gap-1" onClick={handleAddEducation}>
+          <span>
+            <PlusIcon className="size-5"/>
+          </span>
+          <span>Add Education</span>
         </button>
       </div>
-      <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
-        {editingResume ? 'Save Changes' : 'Save & Choose Template'}
+      <button type="submit" className="w-full bg-violet-800 text-white p-2 rounded-lg mt-4">
+        Save & Choose Template
       </button>
     </form>
   );
 };
 
-export default ResumeForm;
+export default ResumeCreationForm;
