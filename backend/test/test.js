@@ -537,4 +537,25 @@ describe("Resume updating", () => {
   })
 })
 
+describe('Resume deletion', () => {
+  it('should delete the resume successfully', async () => {
+    const resume = {
+      remove: sinon.stub().resolves(),
+    }
+    const req = {
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = {
+      json: sinon.spy(),
+    }
+    const stub = sinon.stub(Resume, 'findById').resolves(resume)
+
+    await deleteResume(req, res)
+
+    expect(stub.calledOnceWith(req.params.id)).to.be.true
+    expect(resume.remove.calledOnce).to.be.true
+    expect(res.json.calledWith({message: "Resume deleted"})).to.be.true
+
+    stub.restore()
+  })
 })
