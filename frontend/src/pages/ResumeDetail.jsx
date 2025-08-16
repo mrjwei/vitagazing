@@ -90,6 +90,12 @@ const ResumeDetail = () => {
           size="full"
           customClasses="!w-full !max-w-full"
         />
+        <div
+          className="absolute -left-[9999px] w-[210mm] h-[297mm]"
+          ref={(el) => (hiddenResumeRefs.current[resume._id] = el)}
+        >
+          <Component data={resume} size="full" customClasses="!m-0" />
+        </div>
         <div className="flex justify-between items-center">
           <Link
             to={`/resumes/${resume._id}/templates`}
