@@ -47,13 +47,13 @@ const ResumeList = ({ resumes, setResumes }) => {
   }
 
   return (
-    <div className="grid grid-cols-12 gap-8">
+    <div className="grid grid-cols-12 gap-6">
       {resumes.map((resume) => {
         const TemplateComp = templates[resume.template]?.component
         return (
           <div
             key={resume._id}
-            className="col col-span-12 md:col-span-6 lg:col-span-4 flex flex-col"
+            className="col col-span-12 md:col-span-6 lg:col-span-4 flex flex-col bg-white rounded-lg p-4 shadow-md"
           >
             <Link to={`/resumes/${resume._id}`} className="flex-1">
               {TemplateComp ? (
