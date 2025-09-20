@@ -9,13 +9,13 @@ In the future, more features like subscription, resume import, template customiz
 ### Step 1: Clone the repo
 
 ```
-git clone git@github.com:mrjwei/digital-resume-builder.git
+git clone git@github.com:mrjwei/vitagazing.git
 ```
 
 ### Step 2: Install dependencies
 
 ```
-cd digital-resume-builder
+cd vitagazing
 npm run install-all
 ```
 
