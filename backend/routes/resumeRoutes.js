@@ -1,10 +1,11 @@
-
 const express = require('express');
-const { createResume, fetchResumes, fetchResume, updateResume, deleteResume } = require('../controllers/resuemController');
+const ResumeController = require('../controllers/resume');
 const { protect } = require('../middleware/authMiddleware');
 const router = express.Router();
 
-router.route('/').get(protect, fetchResumes).post(protect, createResume);
-router.route('/:id').get(protect, fetchResume).put(protect, updateResume).delete(protect, deleteResume);
+const resumeController = new ResumeController();
+
+router.route('/').get(protect, resumeController.fetchAll.bind(resumeController)).post(protect, resumeController.create.bind(resumeController));
+router.route('/:id').get(protect, resumeController.fetchOne.bind(resumeController)).put(protect, resumeController.update.bind(resumeController)).delete(protect, resumeController.delete.bind(resumeController));
 
 module.exports = router;
