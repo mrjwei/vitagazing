@@ -33,6 +33,9 @@ const Navbar = () => {
               <Link to="/resumes" className="mr-4">
                 My Resumes
               </Link>
+              <Link to="/cover-letters" className="mr-4">
+                My Cover Letters
+              </Link>
               <button onClick={() => setIsOpen(!isOpen)}>
                 {isOpen ? <UserCircleSolidIcon className="size-8"/> : <UserCircleOutlineIcon className="size-8" />}
               </button>
