@@ -9,6 +9,7 @@ import Register from "./pages/Register"
 import Profile from "./pages/Profile"
 import Resumes from "./pages/Resumes"
 import CoverLetters from "./pages/CoverLetters"
+import CoverLetterDetail from "./pages/CoverLetterDetail"
 import ResumeDetail from "./pages/ResumeDetail"
 import Templates from "./pages/TemplateList"
 import ResumeCreation from "./pages/ResumeCreation"
@@ -77,6 +78,14 @@ function App() {
           element={
             <ProtectedRoute user={user}>
               <CoverLetters />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cover-letters/:coverLetterId"
+          element={
+            <ProtectedRoute user={user}>
+              <CoverLetterDetail />
             </ProtectedRoute>
           }
         />
