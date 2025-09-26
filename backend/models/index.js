@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt")
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 const modelFactory = require("./factory")
 
 async function hashPassword(next) {
@@ -56,22 +56,16 @@ const Resume = modelFactory(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Template",
     },
-    sections: {
-      header: {
-        firstname: { type: String, required: true },
-        lastname: { type: String, required: true },
-        title: { type: String, required: true },
-      },
-      contact: {
-        email: { type: String, required: true },
-        phone: { type: String, required: true },
-        address: { type: String, required: true },
-      },
-      summary: { type: String, required: true },
-      workExperiences: { type: [WorkExperience.schema], default: [] },
-      educations: { type: [Education.schema], default: [] },
-      skills: { type: [Skill.schema], required: true },
-    },
+    firstname: { type: String },
+    lastname: { type: String },
+    title: { type: String },
+    email: { type: String },
+    phone: { type: String },
+    address: { type: String },
+    summary: { type: String },
+    workExperiences: { type: [WorkExperience.schema], default: [] },
+    educations: { type: [Education.schema], default: [] },
+    skills: { type: [Skill.schema], default: [] },
   },
   { timestamps: true }
 )
