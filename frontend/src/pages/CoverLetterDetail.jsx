@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useParams } from "react-router-dom"
 import { v4 as uuidv4 } from "uuid"
@@ -6,7 +6,6 @@ import html2canvas from "html2canvas"
 import jsPDF from "jspdf"
 import { useAuth } from "../context/AuthContext"
 import axiosInstance from "../axiosConfig"
-import { templates } from "../data"
 import Navbar from "../components/Navbar"
 import Breadcrumb from "../components/Breadcrumb"
 
