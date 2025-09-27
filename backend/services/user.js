@@ -4,8 +4,9 @@ const BaseService = require("./base");
 class UserService extends BaseService {
   async create(data) {
     const { username, email, password } = data
+    console.log("username", username)
     try {
-      const userExists = await this.findOne(email)
+      const userExists = await this.findOne({ email })
       if (userExists) {
         return null
       }
