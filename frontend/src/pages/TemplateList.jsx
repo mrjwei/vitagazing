@@ -10,7 +10,7 @@ const TemplateList = () => {
   const { resumeId } = useParams()
   const { user } = useAuth()
   const [resume, setResume] = useState()
-  const [selected, setSelected] = useState()
+  const [selected, setSelected] = useState('default')
 
   useEffect(() => {
     const fetchResume = async () => {
@@ -19,7 +19,7 @@ const TemplateList = () => {
           headers: { Authorization: `Bearer ${user.token}` },
         })
         setResume(response.data)
-        setSelected(response.data.template)
+        setSelected(response.data.templateId)
       } catch (error) {
         alert("Failed to fetch resume.")
       }
@@ -56,13 +56,13 @@ const TemplateList = () => {
         <h1 className="text-3xl font-bold mt-2 mb-8">My Resumes</h1>
         <form method="post" onSubmit={handleSubmit}>
           <div className="grid grid-cols-12 gap-8">
-            {Object.entries(templates).map(([k, v]) => {
-              const Component = v.component
+            {templates.map((template) => {
+              const Component = template.component
               return (
                 <div
-                  className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between ${selected === k ? "border-violet-600 border-4" : "border-gray-200 border-2"}`}
-                  key={k}
-                  onClick={() => setSelected(k)}
+                  className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between ${selected === template.id ? "border-violet-600 border-4" : "border-gray-200 border-2"}`}
+                  key={template.id}
+                  onClick={() => setSelected(template.id)}
                 >
                   <Component
                     data={resume}
@@ -70,18 +70,18 @@ const TemplateList = () => {
                     customClasses="!border-0"
                   />
                   <label
-                    key={k}
-                    className={`flex gap-4 px-8 py-4 ${selected === k ? "bg-violet-600 text-white" : "bg-gray-100"}`}
+                    key={template.id}
+                    className={`flex gap-4 px-8 py-4 ${selected === template.id ? "bg-violet-600 text-white" : "bg-gray-100"}`}
                   >
                     <input
                       type="radio"
                       name="template"
-                      value={k}
+                      value={template.id}
                       className="block w-6"
-                      checked={selected === k}
-                      onChange={() => setSelected(k)}
+                      checked={selected === template.id}
+                      onChange={() => setSelected(template.id)}
                     />
-                    <span className="text-lg font-medium">{k}</span>
+                    <span className="text-lg font-medium">{template.name}</span>
                   </label>
                 </div>
               )

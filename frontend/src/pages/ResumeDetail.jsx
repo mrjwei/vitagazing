@@ -25,12 +25,12 @@ const ResumeDetail = () => {
 
   const Component = useMemo(() => {
     if (resume) {
-      const template = templates[resume.template]
+      const template = templates.find(t => t.id === resume.templateId)
       if (template) {
         return template.component
       }
     }
-    return templates["Default"].component
+    return templates.find(t => t.id === "default").component
   }, [resume])
 
   useEffect(() => {

@@ -49,7 +49,7 @@ const ResumeList = ({ resumes, setResumes }) => {
   return (
     <div className="grid grid-cols-12 gap-6">
       {resumes.map((resume) => {
-        const TemplateComp = templates[resume.template]?.component
+        const TemplateComp = templates.find(t => t.id === resume.templateId)?.component
         return (
           <div
             key={resume._id}

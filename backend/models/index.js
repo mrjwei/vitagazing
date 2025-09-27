@@ -52,10 +52,7 @@ const Resume = modelFactory(
       ref: "User",
       required: true,
     },
-    templateId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Template",
-    },
+    templateId: {type: String, default: "default"},
     firstname: { type: String },
     lastname: { type: String },
     title: { type: String },
@@ -70,36 +67,56 @@ const Resume = modelFactory(
   { timestamps: true }
 )
 
-const Template = modelFactory(
-  "Template",
+const CoverLetter = modelFactory(
+  "CoverLetter",
   {
-    name: { type: String, required: true },
-    description: { type: String },
-    plan: {
-      type: String,
-      enum: ["Free", "Pro"],
-      default: "Free",
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
-    layout: {
-      type: {
-        header: { type: Object, required: true },
-        contact: { type: Object, required: true },
-        summary: { type: Object, required: true },
-        workExperiences: { type: Object, required: true },
-        educations: { type: Object, required: true },
-        skills: { type: Object, required: true },
-      },
-      required: true,
-    },
+    firstname: { type: String },
+    lastname: { type: String },
+    email: { type: String },
+    phone: { type: String },
+    creationDate: { type: String },
+    employer: { type: String },
+    body: { type: String },
   },
   { timestamps: true }
 )
 
+// const Template = modelFactory(
+//   "Template",
+//   {
+//     name: { type: String, required: true },
+//     description: { type: String },
+//     plan: {
+//       type: String,
+//       enum: ["Free", "Pro"],
+//       default: "Free",
+//       required: true,
+//     },
+//     layout: {
+//       type: {
+//         header: { type: Object, required: true },
+//         contact: { type: Object, required: true },
+//         summary: { type: Object, required: true },
+//         workExperiences: { type: Object, required: true },
+//         educations: { type: Object, required: true },
+//         skills: { type: Object, required: true },
+//       },
+//       required: true,
+//     },
+//   },
+//   { timestamps: true }
+// )
+
 module.exports = {
   User,
   Resume,
-  Template,
+  CoverLetter,
+  // Template,
   WorkExperience,
   Education,
   Skill,
