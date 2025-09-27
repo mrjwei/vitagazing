@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
 
 const Register = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,9 +32,9 @@ const Register = () => {
         <h1 className="text-2xl font-medium mb-4 text-center">Create an Account</h1>
         <input
           type="text"
-          placeholder="Name"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          placeholder="Username"
+          value={formData.username}
+          onChange={(e) => setFormData({ ...formData, username: e.target.value })}
           className="w-full mb-4 p-2 border rounded"
         />
         <input
