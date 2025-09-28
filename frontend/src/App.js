@@ -15,6 +15,7 @@ import Templates from "./pages/TemplateList"
 import ResumeCreation from "./pages/ResumeCreation"
 import CoverLetterCreation from "./pages/CoverLetterCreation"
 import ResumeUpdate from "./pages/ResumeUpdate"
+import CoverLetterUpdate from "./pages/CoverLetterUpdate"
 import { useAuth } from "./context/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
 
@@ -87,6 +88,14 @@ function App() {
           element={
             <ProtectedRoute user={user}>
               <CoverLetters />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cover-letters/:coverLetterId/edit"
+          element={
+            <ProtectedRoute user={user}>
+              <CoverLetterUpdate />
             </ProtectedRoute>
           }
         />
