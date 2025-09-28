@@ -6,7 +6,7 @@ import Navbar from "../components/Navbar"
 const Profile = () => {
   const { user } = useAuth(); // Access user token from context
   const [formData, setFormData] = useState({
-    name: '',
+    username: '',
     email: '',
     university: '',
     address: '',
@@ -22,7 +22,7 @@ const Profile = () => {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setFormData({
-          name: response.data.name,
+          username: response.data.username,
           email: response.data.email,
           university: response.data.university || '',
           address: response.data.address || '',
@@ -64,9 +64,9 @@ const Profile = () => {
           <h1 className="text-2xl font-bold mb-4 text-center">Your Profile</h1>
           <input
             type="text"
-            placeholder="Name"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="Username"
+            value={formData.username}
+            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
             className="w-full mb-4 p-2 border rounded"
           />
           <input
