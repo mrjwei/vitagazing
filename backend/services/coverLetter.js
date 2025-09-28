@@ -16,7 +16,6 @@ class CoverLetterService extends BaseService {
     try {
       const coverLetter = await CoverLetter.create({
         userId,
-        templateId,
         firstname,
         lastname,
         email,

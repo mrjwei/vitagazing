@@ -78,15 +78,15 @@ const CoverLetterDetail = () => {
       <div className="container mx-auto lg:max-w-[960px] px-8 py-[88px]">
         <Breadcrumb linkList={linkList} />
         <h1 className="text-3xl font-bold mt-2 mb-8">Cover Letter Detail</h1>
-        <div className="bg-white rounded-lg p-4 shadow-md mb-4">
-          <h2 className="text-2xl font-semibold mb-2">
+        <div className="bg-white rounded-lg p-10 shadow-md mb-4">
+          <h2 className="text-3xl font-semibold mb-4">
             {coverLetter.firstname} {coverLetter.lastname}
           </h2>
           <p className="border-y py-2 mb-2">
-            Email: {coverLetter.email} | Phone Number: {coverLetter.phone}
+            <span className="text-neutral-500">Email:</span> {coverLetter.email} <span className="text-neutral-500 font-semibold">&nbsp;|&nbsp;</span> <span className="text-neutral-500 font-semibold">Phone Number:</span> {coverLetter.phone}
           </p>
-          <p>{new Date(coverLetter.creationDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
-          <p>Employer: {coverLetter.employer}</p>
+          <p className="text-neutral-500">{new Date(coverLetter.creationDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p>
+          <p className="font-semibold text-xl">{coverLetter.employer}</p>
           <div className="mt-4">
             <p>{coverLetter.body}</p>
           </div>
@@ -117,7 +117,7 @@ const CoverLetterDetail = () => {
               Export
             </button>
             <Link
-              to={`/resumes/${coverLetter._id}/edit?from=/resumes/${coverLetter._id}`}
+              to={`/cover-letters/${coverLetter._id}/edit?from=/cover-letters/${coverLetter._id}`}
               className="text-violet-800 px-4 py-2 rounded flex items-center hover:bg-violet-100 transition-all duration-300 ease-in-out"
             >
               Edit

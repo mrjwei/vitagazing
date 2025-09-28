@@ -13,7 +13,9 @@ import CoverLetterDetail from "./pages/CoverLetterDetail"
 import ResumeDetail from "./pages/ResumeDetail"
 import Templates from "./pages/TemplateList"
 import ResumeCreation from "./pages/ResumeCreation"
+import CoverLetterCreation from "./pages/CoverLetterCreation"
 import ResumeUpdate from "./pages/ResumeUpdate"
+import CoverLetterUpdate from "./pages/CoverLetterUpdate"
 import { useAuth } from "./context/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
 
@@ -74,10 +76,26 @@ function App() {
           }
         />
         <Route
+          path="/cover-letters/new"
+          element={
+            <ProtectedRoute user={user}>
+              <CoverLetterCreation />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/cover-letters"
           element={
             <ProtectedRoute user={user}>
               <CoverLetters />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cover-letters/:coverLetterId/edit"
+          element={
+            <ProtectedRoute user={user}>
+              <CoverLetterUpdate />
             </ProtectedRoute>
           }
         />

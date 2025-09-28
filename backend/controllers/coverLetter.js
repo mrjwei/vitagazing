@@ -58,7 +58,6 @@ class CoverLetterController {
 
   async update(req, res) {
     const {
-      userId,
       firstname,
       lastname,
       email,
@@ -79,13 +78,6 @@ class CoverLetterController {
       coverLetter.creationDate = creationDate || coverLetter.creationDate
       coverLetter.employer = employer || coverLetter.employer
       coverLetter.body = body || coverLetter.body
-      coverLetter.email = email || coverLetter.email
-      coverLetter.phone = phone || coverLetter.phone
-      coverLetter.address = address || coverLetter.address
-      coverLetter.summary = summary || coverLetter.summary
-      coverLetter.workExperiences = workExperiences || coverLetter.workExperiences
-      coverLetter.educations = educations || coverLetter.educations
-      coverLetter.skills = skills || coverLetter.skills
       const updatedCoverLetter = await coverLetter.save()
       res.json(updatedCoverLetter)
     } catch (error) {
