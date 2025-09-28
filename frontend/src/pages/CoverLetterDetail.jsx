@@ -117,7 +117,7 @@ const CoverLetterDetail = () => {
               Export
             </button>
             <Link
-              to={`/resumes/${coverLetter._id}/edit?from=/resumes/${coverLetter._id}`}
+              to={`/cover-letters/${coverLetter._id}/edit?from=/cover-letters/${coverLetter._id}`}
               className="text-violet-800 px-4 py-2 rounded flex items-center hover:bg-violet-100 transition-all duration-300 ease-in-out"
             >
               Edit
