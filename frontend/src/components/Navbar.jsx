@@ -30,7 +30,15 @@ const Navbar = () => {
                 </span>
                 <span>New Resume</span>
               </Link>
-              <Link to="/resumes" className="mr-4">
+              <Link
+                to="/cover-letters/new"
+                className="hidden md:flex mr-4 items-center gap-1 bg-violet-800 text-white px-3 p-2 rounded-lg"
+              >
+                <span>
+                  <PlusIcon className="size-5" />
+                </span>
+                <span>New Cover Letter</span>
+              </Link>
                 My Resumes
               </Link>
               <Link to="/cover-letters" className="mr-4">
