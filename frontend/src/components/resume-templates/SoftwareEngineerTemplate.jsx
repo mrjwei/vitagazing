@@ -1,6 +1,7 @@
 import './template.css'
+import { Tag } from '../Tag'
 
-const SoftwareEngineerTemplate = ({data, size = 'full', customClasses = ''}) => {
+const SoftwareEngineerTemplate = ({data, size = 'full', customClasses = '', premium}) => {
   const {firstname, lastname, email, phone, summary, workExperiences, educations} = data
   let className
   if (size === 'thumbnail') {
@@ -10,6 +11,7 @@ const SoftwareEngineerTemplate = ({data, size = 'full', customClasses = ''}) => 
   }
   return (
     <div className={`software-engineer-temp ${className} ${customClasses} relative border rounded-lg h-full bg-white`}>
+      {premium && (<Tag className="absolute left-0 top-0 z-50 rounded-tl">Premium</Tag>)}
       <h1 className="font-bold bg-sky-900 text-white rounded-t-lg uppercase">{firstname} {lastname}</h1>
       <div className="content grid grid-cols-12">
         <div className="col col-span-3">

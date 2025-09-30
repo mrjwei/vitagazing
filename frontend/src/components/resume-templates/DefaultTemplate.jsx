@@ -1,6 +1,7 @@
+import { Tag } from "../Tag"
 import './template.css'
 
-const DefaultTemplate = ({data, size = 'full', customClasses = ''}) => {
+const DefaultTemplate = ({data, size = 'full', customClasses = '', premium}) => {
   const {firstname, lastname, email, phone, summary, workExperiences, educations} = data
   let className
   if (size === 'thumbnail') {
@@ -11,6 +12,7 @@ const DefaultTemplate = ({data, size = 'full', customClasses = ''}) => {
   return (
     <div className={`default-temp ${className} ${customClasses} border rounded-lg h-full bg-white`}>
       <div>
+        {premium && (<Tag className="absolute left-0 top-0 z-50 rounded-tl">Premium</Tag>)}
         {/* name */}
         <h1 className="font-bold">{firstname} {lastname}</h1>
         {/* contact */}

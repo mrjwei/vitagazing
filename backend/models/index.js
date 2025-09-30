@@ -19,6 +19,7 @@ const User = modelFactory(
     password: { type: String, required: true },
     university: { type: String },
     address: { type: String },
+    subscribed: { type: Boolean, default: false },
   },
   (options = {
     pre: [

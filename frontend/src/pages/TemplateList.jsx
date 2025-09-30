@@ -58,9 +58,10 @@ const TemplateList = () => {
           <div className="grid grid-cols-12 gap-8">
             {templates.map((template) => {
               const Component = template.component
+              if (userRef.current.subscribed === true) {
               return (
                 <div
-                  className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between ${selected === template.id ? "border-violet-600 border-4" : "border-gray-200 border-2"}`}
+                    className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between border-gray-200 ${selected === template.id ? "border-violet-600 border-4" : "border-gray-200 border-2"}`}
                   key={template.id}
                   onClick={() => setSelected(template.id)}
                 >
@@ -68,10 +69,11 @@ const TemplateList = () => {
                     data={resume}
                     size="thumbnail"
                     customClasses="!border-0"
+                      premium={false}
                   />
                   <label
                     key={template.id}
-                    className={`flex gap-4 px-8 py-4 ${selected === template.id ? "bg-violet-600 text-white" : "bg-gray-100"}`}
+                      className={`flex gap-4 px-8 py-4 rounded-b-lg ${selected === template.id ? "bg-violet-600 text-white" : "bg-gray-100"}`}
                   >
                     <input
                       type="radio"
@@ -81,8 +83,83 @@ const TemplateList = () => {
                       checked={selected === template.id}
                       onChange={() => setSelected(template.id)}
                     />
-                    <span className="text-lg font-medium">{template.name}</span>
+                      <span className="text-lg font-medium">
+                        {template.name}
+                      </span>
+                    </label>
+                  </div>
+                )
+              }
+              return template.premium ? (
+                <div
+                  className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between border-gray-200 border-2 relative`}
+                  key={template.id}
+                  onClick={() => setSelected(template.id)}
+                >
+                  <div className="absolute w-full h-full rounded-xl bg-black opacity-50 z-20"></div>
+                  <button onClick={handleClickUpgrade} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-violet-700 font-semibold px-4 py-2 rounded hover:bg-violet-800 hover:text-white transition-all duration-300 ease-in-out z-50">
+                    Upgrade
+                  </button>
+                  <div
+                    className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between border-gray-200 border-2}`}
+                    key={template.id}
+                  >
+                    <Component
+                      data={resume}
+                      size="thumbnail"
+                      customClasses="!border-0"
+                      premium={template.premium}
+                    />
+                    <label
+                      key={template.id}
+                      className={`flex gap-4 px-8 py-4 bg-gray-100}`}
+                    >
+                      <input
+                        type="radio"
+                        name="template"
+                        className="block w-6"
+                        disabled
+                      />
+                      <span className="text-lg font-medium">
+                        {template.name}
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between border-gray-200 border-2`}
+                  key={template.id}
+                  onClick={() => setSelected(template.id)}
+                >
+                  <div
+                    className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between ${selected === template.id ? "border-violet-600 border-4" : "border-gray-200 border-2"}`}
+                    key={template.id}
+                    onClick={() => setSelected(template.id)}
+                  >
+                    <Component
+                      data={resume}
+                      size="thumbnail"
+                      customClasses="!border-0"
+                      premium={template.premium}
+                    />
+                    <label
+                      key={template.id}
+                      className={`flex gap-4 px-8 py-4 ${selected === template.id ? "bg-violet-600 text-white" : "bg-gray-100"}`}
+                    >
+                      <input
+                        type="radio"
+                        name="template"
+                        value={template.id}
+                        className="block w-6"
+                        checked={selected === template.id}
+                        onChange={() => setSelected(template.id)}
+                      />
+                      <span className="text-lg font-medium">
+                        {template.name}
+                      </span>
                   </label>
+                  </div>
                 </div>
               )
             })}
