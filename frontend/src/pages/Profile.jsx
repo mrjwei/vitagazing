@@ -15,15 +15,14 @@ const Profile = () => {
   const { user, login } = useAuth();
   const [loading, setLoading] = useState(false);
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    // Fetch profile data from the backend
     const fetchProfile = async () => {
       setLoading(true);
       try {
         const response = await axiosInstance.get('/api/auth/profile', {
           headers: { Authorization: `Bearer ${user.token}` },
         });
-        console.log('Profile data:', response.data);
         login({...user, ...response.data });
       } catch (error) {
         alert('Failed to fetch profile. Please try again.');
@@ -32,8 +31,9 @@ const Profile = () => {
       }
     };
 
-    if (user) fetchProfile();
-  });
+    fetchProfile();
+  }, []);
+  /* eslint-disable react-hooks/exhaustive-deps */
 
   const handleSubscription = async () => {
     if (user.subscribed) {
