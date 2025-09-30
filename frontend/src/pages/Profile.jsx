@@ -33,7 +33,7 @@ const Profile = () => {
     };
 
     if (user) fetchProfile();
-  }, []);
+  });
 
   const handleSubscription = async () => {
     if (user.subscribed) {
