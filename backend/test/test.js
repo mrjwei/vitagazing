@@ -3,13 +3,17 @@ const chaiHttp = require("chai-http")
 const mongoose = require("mongoose")
 const sinon = require("sinon")
 const ResumeController = require("../controllers/resume")
+const CoverLetterController = require("../controllers/coverLetter")
 const ResumeService = require("../services/resume")
+const CoverLetterService = require("../services/coverLetter")
 const { expect } = chai
 
 chai.use(chaiHttp)
 
 const resumeController = new ResumeController()
+const coverLetterController = new CoverLetterController()
 
+// Resume
 describe("Resume creation", () => {
   const req = {
     user: { id: new mongoose.Types.ObjectId() },
@@ -578,6 +582,322 @@ describe('Resume deletion', () => {
     expect(stub.calledOnceWith(req.params.id)).to.be.true
     expect(resume.remove.calledOnce).to.be.true
     expect(res.json.calledWith({message: "Resume deleted"})).to.be.true
+
+    stub.restore()
+  })
+})
+
+// Cover letter
+describe("Cover letter creation", () => {
+  const req = {
+    user: { id: new mongoose.Types.ObjectId() },
+    body: {
+      firstname: "John",
+      lastname: "Doe",
+      email: "john@mail.com",
+      phone: "0000111222",
+      creationDate: "2024-10-01",
+      employer: "Sample Employer",
+      body: "This is a sample cover letter body.",
+    },
+  }
+  const res = {
+    status: sinon.stub().returnsThis(),
+    json: sinon.spy(),
+  }
+
+  it("should create a new cover letter successfully", async () => {
+    const newCoverLetter = {
+      _id: new mongoose.Types.ObjectId(),
+      ...req.body,
+      userId: req.user.id,
+    }
+
+    const stub = sinon.stub(CoverLetterService.prototype, "create").resolves(newCoverLetter)
+
+    await coverLetterController.create(req, res)
+
+    expect(stub.calledOnceWith({ userId: req.user.id, ...req.body })).to.be.true
+    expect(res.status.calledWith(201)).to.be.true
+    expect(res.json.calledWith(newCoverLetter)).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 500 if an error occurs", async () => {
+    const stub = sinon.stub(CoverLetterService.prototype, "create").throws(new Error("Server Error"))
+
+    await coverLetterController.create(req, res)
+
+    expect(res.status.calledWith(500)).to.be.true
+    expect(res.json.calledWith({ message: "Server Error" })).to.be.true
+
+    stub.restore()
+  })
+})
+
+describe("Cover letter fetching", () => {
+  it("should return all cover letters of a user", async () => {
+    const coverLetters = [
+      {
+        firstname: "John",
+        lastname: "Doe",
+        email: "john@mail.com",
+        phone: "0000111222",
+        creationDate: "2024-10-01",
+        employer: "Sample Employer",
+        body: "This is a sample cover letter body.",
+      },
+      {
+        firstname: "Alice",
+        lastname: "Wong",
+        email: "alice@mail.com",
+        phone: "6666777888",
+        creationDate: "2024-09-15",
+        employer: "Another Employer",
+        body: "This is another sample cover letter body.",
+      },
+    ]
+    const req = {
+      user: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    }
+    const stub = sinon.stub(CoverLetterService.prototype, "findAll").resolves(coverLetters)
+
+    await coverLetterController.fetchAll(req, res)
+
+    expect(stub.calledOnceWith({ userId: req.user.id })).to.be.true
+    expect(res.json.calledWith(coverLetters)).to.be.true
+
+    stub.restore()
+  })
+
+  it("should be able to return a single cover letter of a user", async () => {
+    const req = {
+      user: { id: new mongoose.Types.ObjectId() },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    }
+    const coverLetter = {
+        firstname: "John",
+        lastname: "Doe",
+        email: "john@mail.com",
+        phone: "0000111222",
+        creationDate: "2024-10-01",
+        employer: "Sample Employer",
+        body: "This is a sample cover letter body.",
+      }
+    const stub = sinon.stub(CoverLetterService.prototype, "findOne").resolves(coverLetter)
+
+    await coverLetterController.fetchOne(req, res)
+
+    expect(stub.calledOnceWith({ _id: req.params.id, userId: req.user.id })).to
+      .be.true
+    expect(res.json.calledWith(coverLetter)).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 404 if the cover letter was not found", async () => {
+    const req = {
+      user: { id: new mongoose.Types.ObjectId() },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    }
+    const coverLetter = null
+
+    const stub = sinon.stub(CoverLetterService.prototype, "findOne").resolves(coverLetter)
+
+    await coverLetterController.fetchOne(req, res)
+
+    expect(res.status.calledWith(404)).to.be.true
+    expect(res.json.calledWith({ message: "Cover letter not found" })).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 500 if an error other than not-found occurs", async () => {
+    const req = {
+      user: { id: new mongoose.Types.ObjectId() },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    }
+
+    const stub = sinon.stub(CoverLetterService.prototype, "findOne").throws(new Error("Server Error"))
+
+    await coverLetterController.fetchOne(req, res)
+
+    expect(res.status.calledWith(500)).to.be.true
+    expect(res.json.calledWith({ message: "Server Error" })).to.be.true
+
+    stub.restore()
+  })
+})
+
+describe("Cover Letter updating", () => {
+  it("should update a cover letter successfully", async () => {
+    const coverLetter = {
+        firstname: "John",
+        lastname: "Doe",
+        email: "john@mail.com",
+        phone: "0000111222",
+        creationDate: "2024-10-01",
+        employer: "Sample Employer",
+        body: "This is a sample cover letter body.",
+        save: sinon.stub().returnsThis(),
+      }
+    const req = {
+      body: {
+        ...coverLetter,
+        firstname: "Alice",
+        employer: "Another Employer",
+      },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    }
+    const stub = sinon.stub(CoverLetterService.prototype, "findById").resolves(coverLetter)
+
+    await coverLetterController.update(req, res)
+
+    expect(stub.calledOnceWith(req.params.id)).to.be.true
+    expect(coverLetter.save.calledOnce).to.be.true
+    expect(coverLetter.firstname).to.equal(req.body.firstname)
+    expect(coverLetter.employer).to.equal(req.body.employer)
+    expect(res.json.calledWith({ ...req.body })).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 404 if the cover letter was not found", async () => {
+    const coverLetter = {
+        firstname: "John",
+        lastname: "Doe",
+        email: "john@mail.com",
+        phone: "0000111222",
+        creationDate: "2024-10-01",
+        employer: "Sample Employer",
+        body: "This is a sample cover letter body.",
+        save: sinon.stub().returnsThis(),
+      }
+    const req = {
+      body: {
+        ...coverLetter,
+        firstname: "Alice",
+        employer: "Another Employer",
+      },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    }
+    const nullCoverLetter = null
+
+    const stub = sinon.stub(CoverLetterService.prototype, "findById").resolves(nullCoverLetter)
+
+    await coverLetterController.update(req, res)
+
+    expect(stub.calledOnceWith(req.params.id)).to.be.true
+    expect(res.status.calledWith(404)).to.be.true
+    expect(res.json.calledWith({ message: "Cover letter not found" })).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 500 if an error other than not-found occurs when trying to find the cover letter", async () => {
+    const coverLetter = {
+        firstname: "John",
+        lastname: "Doe",
+        email: "john@mail.com",
+        phone: "0000111222",
+        creationDate: "2024-10-01",
+        employer: "Sample Employer",
+        body: "This is a sample cover letter body.",
+        save: sinon.stub().returnsThis(),
+      }
+    const req = {
+      body: coverLetter,
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    }
+
+    const stub = sinon.stub(CoverLetterService.prototype, "findById").throws(new Error('An unknown error occurred'))
+
+    await coverLetterController.update(req, res)
+
+    expect(res.status.calledWith(500)).to.be.true
+    expect(res.json.calledWith({ message: 'An unknown error occurred' })).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 500 if an error other than not-found occurs when trying to save", async () => {
+    const coverLetter = {
+        firstname: "John",
+        lastname: "Doe",
+        email: "john@mail.com",
+        phone: "0000111222",
+        creationDate: "2024-10-01",
+        employer: "Sample Employer",
+        body: "This is a sample cover letter body.",
+        save: sinon.stub().throws(new Error('Failed to save')),
+      }
+    const req = {
+      body: coverLetter,
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    }
+
+    const stub = sinon.stub(CoverLetterService.prototype, "findById").resolves(coverLetter)
+
+    await coverLetterController.update(req, res)
+
+    expect(res.status.calledWith(500)).to.be.true
+    expect(res.json.calledWith({ message: 'Failed to save' })).to.be.true
+
+    stub.restore()
+  })
+})
+
+describe('Cover Letter deletion', () => {
+  it('should delete the cover letter successfully', async () => {
+    const coverLetter = {
+      remove: sinon.stub().resolves(),
+    }
+    const req = {
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = {
+      json: sinon.spy(),
+    }
+    const stub = sinon.stub(CoverLetterService.prototype, 'findById').resolves(coverLetter)
+
+    await coverLetterController.delete(req, res)
+
+    expect(stub.calledOnceWith(req.params.id)).to.be.true
+    expect(coverLetter.remove.calledOnce).to.be.true
+    expect(res.json.calledWith({message: "Cover letter deleted"})).to.be.true
 
     stub.restore()
   })
