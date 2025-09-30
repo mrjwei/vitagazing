@@ -17,7 +17,7 @@ const SubscriptionForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await axiosInstance.put("/api/subscription", {subscribed: true}, {
+      await axiosInstance.put("/api/subscribe", {subscribed: true}, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       login({...user, subscribed: true})

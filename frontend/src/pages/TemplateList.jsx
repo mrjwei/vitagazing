@@ -54,7 +54,7 @@ const TemplateList = () => {
 
   const handleClickUpgrade = () => {
     localStorage.setItem("prevURL", window.location.pathname)
-    navigate(`/subscription`)
+    navigate(`/subscribe`)
   }
   return (
     <>

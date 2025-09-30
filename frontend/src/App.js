@@ -109,7 +109,7 @@ function App() {
           }
         />
         <Route
-          path="/subscription"
+          path="/subscribe"
           element={
             <ProtectedRoute user={user}>
               <Subscription />

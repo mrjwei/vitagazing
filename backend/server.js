@@ -14,7 +14,7 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/resumes', require('./routes/resumeRoutes'));
 app.use('/api/cover-letters', require('./routes/coverLetterRoutes'));
-app.use('/api/subscription', require('./routes/subscriptionRoutes'));
+app.use('/api/subscribe', require('./routes/subscriptionRoutes'));
 
 // Export the app object for testing
 if (require.main === module) {

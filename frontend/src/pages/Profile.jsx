@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axiosInstance from '../axiosConfig';
 import Navbar from "../components/Navbar"
+import Breadcrumb from "../components/Breadcrumb"
+
+const linkList = [
+  { label: "Home", href: "/" },
+  { label: "Profile", href: "" },
+]
 
 const Profile = () => {
-  const { user } = useAuth(); // Access user token from context
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    university: '',
-    address: '',
-  });
+  const navigate = useNavigate();
+  const { user, login } = useAuth();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -21,12 +23,8 @@ const Profile = () => {
         const response = await axiosInstance.get('/api/auth/profile', {
           headers: { Authorization: `Bearer ${user.token}` },
         });
-        setFormData({
-          username: response.data.username,
-          email: response.data.email,
-          university: response.data.university || '',
-          address: response.data.address || '',
-        });
+        console.log('Profile data:', response.data);
+        login({...user, ...response.data });
       } catch (error) {
         alert('Failed to fetch profile. Please try again.');
       } finally {
@@ -35,20 +33,24 @@ const Profile = () => {
     };
 
     if (user) fetchProfile();
-  }, [user]);
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await axiosInstance.put('/api/auth/profile', formData, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
-      alert('Profile updated successfully!');
-    } catch (error) {
-      alert('Failed to update profile. Please try again.');
-    } finally {
-      setLoading(false);
+  const handleSubscription = async () => {
+    if (user.subscribed) {
+      // Unsubscribe logic
+      try {
+        await axiosInstance.put('/api/auth/unsubscribe', {subscribed: false}, {
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
+        login({ ...user, subscribed: false });
+        alert('You have unsubscribed successfully.');
+      } catch (error) {
+        alert('Failed to unsubscribe. Please try again.');
+      }
+    } else {
+      // Redirect to subscription page
+      localStorage.setItem("prevURL", window.location.pathname)
+      navigate('/subscribe');
     }
   };
 
@@ -59,41 +61,40 @@ const Profile = () => {
   return (
     <>
       <Navbar/>
-      <div className="max-w-md mx-auto mt-20">
-        <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded">
-          <h1 className="text-2xl font-bold mb-4 text-center">Your Profile</h1>
-          <input
-            type="text"
-            placeholder="Username"
-            value={formData.username}
-            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-            className="w-full mb-4 p-2 border rounded"
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full mb-4 p-2 border rounded"
-          />
-          <input
-            type="text"
-            placeholder="University"
-            value={formData.university}
-            onChange={(e) => setFormData({ ...formData, university: e.target.value })}
-            className="w-full mb-4 p-2 border rounded"
-          />
-          <input
-            type="text"
-            placeholder="Address"
-            value={formData.address}
-            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-            className="w-full mb-4 p-2 border rounded"
-          />
-          <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
-            {loading ? 'Updating...' : 'Update Profile'}
-          </button>
-        </form>
+      <div className="container mx-auto px-8 py-[88px] !max-w-[1280px]">
+        <Breadcrumb linkList={linkList} />
+        <div className="bg-white p-6 shadow-md rounded-xl mt-2">
+          <h1 className="text-2xl font-bold mb-4">Your Profile</h1>
+          <table className="w-full">
+            <tbody>
+              <tr className="border-b">
+                <th className="font-semibold pr-4 py-2 text-left">Username</th>
+                <td className="py-2">{user.username}</td>
+              </tr>
+              <tr className="border-b">
+                <th className="font-semibold pr-4 py-2 text-left">Email</th>
+                <td className="py-2">{user.email}</td>
+              </tr>
+              <tr className="border-b">
+                <th className="font-semibold pr-4 py-2 text-left">University</th>
+                <td className="py-2">{user.university}</td>
+              </tr>
+              <tr className="border-b">
+                <th className="font-semibold pr-4 py-2 text-left">Address</th>
+                <td className="py-2">{user.address}</td>
+              </tr>
+              <tr className="border-b">
+                <th className="font-semibold pr-4 py-2 text-left">Subscription</th>
+                <td className="py-2 flex justify-between">
+                  <span>{user.subscribed ? 'Yes' : 'No'}</span>
+                  <button onClick={handleSubscription} className="ml-2 text-violet-600 hover:underline">
+                    {user.subscribed ? 'Unsubscribe' : 'Subscribe'}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );
