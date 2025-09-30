@@ -1,3 +1,4 @@
+import React from "react"
 import { useState, useEffect } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
@@ -9,10 +10,12 @@ const TemplateList = () => {
   const navigate = useNavigate()
   const { resumeId } = useParams()
   const { user } = useAuth()
+  const userRef = React.useRef(user)
   const [resume, setResume] = useState()
-  const [selected, setSelected] = useState('default')
+  const [selected, setSelected] = useState("default")
 
   useEffect(() => {
+    userRef.current = JSON.parse(localStorage.getItem('user'))
     const fetchResume = async () => {
       try {
         const response = await axiosInstance.get(`/api/resumes/${resumeId}`, {
@@ -24,7 +27,6 @@ const TemplateList = () => {
         alert("Failed to fetch resume.")
       }
     }
-
     fetchResume()
   }, [user, resumeId])
 
@@ -39,7 +41,7 @@ const TemplateList = () => {
     try {
       await axiosInstance.put(
         `/api/resumes/${resumeId}`,
-        { template },
+        { templateId: template },
         {
           headers: { Authorization: `Bearer ${user.token}` },
         }
@@ -49,9 +51,14 @@ const TemplateList = () => {
       alert("Failed to apply template.")
     }
   }
+
+  const handleClickUpgrade = () => {
+    localStorage.setItem("prevURL", window.location.pathname)
+    navigate(`/subscription`)
+  }
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <div className="container mx-auto px-8 py-[88px]">
         <h1 className="text-3xl font-bold mt-2 mb-8">My Resumes</h1>
         <form method="post" onSubmit={handleSubmit}>
@@ -59,30 +66,30 @@ const TemplateList = () => {
             {templates.map((template) => {
               const Component = template.component
               if (userRef.current.subscribed === true) {
-              return (
-                <div
+                return (
+                  <div
                     className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between border-gray-200 ${selected === template.id ? "border-violet-600 border-4" : "border-gray-200 border-2"}`}
-                  key={template.id}
-                  onClick={() => setSelected(template.id)}
-                >
-                  <Component
-                    data={resume}
-                    size="thumbnail"
-                    customClasses="!border-0"
-                      premium={false}
-                  />
-                  <label
                     key={template.id}
-                      className={`flex gap-4 px-8 py-4 rounded-b-lg ${selected === template.id ? "bg-violet-600 text-white" : "bg-gray-100"}`}
+                    onClick={() => setSelected(template.id)}
                   >
-                    <input
-                      type="radio"
-                      name="template"
-                      value={template.id}
-                      className="block w-6"
-                      checked={selected === template.id}
-                      onChange={() => setSelected(template.id)}
+                    <Component
+                      data={resume}
+                      size="thumbnail"
+                      customClasses="!border-0"
+                      premium={false}
                     />
+                    <label
+                      key={template.id}
+                      className={`flex gap-4 px-8 py-4 rounded-b-lg ${selected === template.id ? "bg-violet-600 text-white" : "bg-gray-100"}`}
+                    >
+                      <input
+                        type="radio"
+                        name="template"
+                        value={template.id}
+                        className="block w-6"
+                        checked={selected === template.id}
+                        onChange={() => setSelected(template.id)}
+                      />
                       <span className="text-lg font-medium">
                         {template.name}
                       </span>
@@ -158,7 +165,7 @@ const TemplateList = () => {
                       <span className="text-lg font-medium">
                         {template.name}
                       </span>
-                  </label>
+                    </label>
                   </div>
                 </div>
               )

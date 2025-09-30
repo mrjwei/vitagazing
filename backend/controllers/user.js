@@ -64,19 +64,21 @@ class UserController {
       const user = await this.service.findById(req.user.id)
       if (!user) return res.status(404).json({ message: "User not found" })
 
-      const { username, email, university, address } = req.body
+      const { username, email, university, address, subscribed } = req.body
       user.username = username || user.username
       user.email = email || user.email
       user.university = university || user.university
       user.address = address || user.address
+      user.subscribed = subscribed !== undefined ? subscribed : user.subscribed
 
       const updatedUser = await user.save()
       res.json({
         id: updatedUser.id,
-        name: updatedUser.name,
+        username: updatedUser.username,
         email: updatedUser.email,
         university: updatedUser.university,
         address: updatedUser.address,
+        subscribed: updatedUser.subscribed,
         token: generateToken(updatedUser.id),
       })
     } catch (error) {
