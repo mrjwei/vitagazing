@@ -4,14 +4,17 @@ const mongoose = require("mongoose")
 const sinon = require("sinon")
 const ResumeController = require("../controllers/resume")
 const CoverLetterController = require("../controllers/coverLetter")
+const UserController = require("../controllers/user")
 const ResumeService = require("../services/resume")
 const CoverLetterService = require("../services/coverLetter")
+const UserService = require("../services/user")
 const { expect } = chai
 
 chai.use(chaiHttp)
 
 const resumeController = new ResumeController()
 const coverLetterController = new CoverLetterController()
+const userController = new UserController()
 
 // Resume
 describe("Resume creation", () => {
@@ -69,7 +72,9 @@ describe("Resume creation", () => {
       userId: req.user.id,
     }
 
-    const stub = sinon.stub(ResumeService.prototype, "create").resolves(newResume)
+    const stub = sinon
+      .stub(ResumeService.prototype, "create")
+      .resolves(newResume)
 
     await resumeController.create(req, res)
 
@@ -81,7 +86,9 @@ describe("Resume creation", () => {
   })
 
   it("should return 500 if an error occurs", async () => {
-    const stub = sinon.stub(ResumeService.prototype, "create").throws(new Error("Server Error"))
+    const stub = sinon
+      .stub(ResumeService.prototype, "create")
+      .throws(new Error("Server Error"))
 
     await resumeController.create(req, res)
 
@@ -171,7 +178,11 @@ describe("Resume fetching", () => {
             endDate: "2016-12-31",
           },
         ],
-        skills: [{ name: "Photoshop" }, { name: "Illustrator" }, { name: "Figma" }],
+        skills: [
+          { name: "Photoshop" },
+          { name: "Illustrator" },
+          { name: "Figma" },
+        ],
       },
     ]
     const req = {
@@ -181,7 +192,9 @@ describe("Resume fetching", () => {
       status: sinon.stub().returnsThis(),
       json: sinon.spy(),
     }
-    const stub = sinon.stub(ResumeService.prototype, "findAll").resolves(resumes)
+    const stub = sinon
+      .stub(ResumeService.prototype, "findAll")
+      .resolves(resumes)
 
     await resumeController.fetchAll(req, res)
 
@@ -201,44 +214,44 @@ describe("Resume fetching", () => {
       json: sinon.spy(),
     }
     const resume = {
-        templateId: new mongoose.Types.ObjectId(),
-        firstname: "John",
-        lastname: "Doe",
-        title: "Software Engineer",
-        email: "john@mail.com",
-        phone: "0000111222",
-        address: "1 Infinite Loop, Cupertino, CA",
-        summary: "This is a sample summary.",
-        workExperiences: [
-          {
-            companyName: "Sample Company 1",
-            startDate: "2020-01-20",
-            endDate: "2022-10-30",
-            responsibility: "Sample responsibility description",
-          },
-          {
-            companyName: "Sample Company 2",
-            startDate: "2023-02-01",
-            endDate: "2025-07-31",
-            responsibility: "Sample responsibility description 2",
-          },
-        ],
-        educations: [
-          {
-            degree: "Bachelor of Engineering",
-            institution: "The University of Queensland",
-            startDate: "2010-02-01",
-            endDate: "2014-01-31",
-          },
-          {
-            degree: "Master of IT",
-            institution: "Queensland University of Technology",
-            startDate: "2014-07-01",
-            endDate: "2015-06-30",
-          },
-        ],
-        skills: [{ name: "Java" }, { name: "C++" }, { name: "Python" }],
-      }
+      templateId: new mongoose.Types.ObjectId(),
+      firstname: "John",
+      lastname: "Doe",
+      title: "Software Engineer",
+      email: "john@mail.com",
+      phone: "0000111222",
+      address: "1 Infinite Loop, Cupertino, CA",
+      summary: "This is a sample summary.",
+      workExperiences: [
+        {
+          companyName: "Sample Company 1",
+          startDate: "2020-01-20",
+          endDate: "2022-10-30",
+          responsibility: "Sample responsibility description",
+        },
+        {
+          companyName: "Sample Company 2",
+          startDate: "2023-02-01",
+          endDate: "2025-07-31",
+          responsibility: "Sample responsibility description 2",
+        },
+      ],
+      educations: [
+        {
+          degree: "Bachelor of Engineering",
+          institution: "The University of Queensland",
+          startDate: "2010-02-01",
+          endDate: "2014-01-31",
+        },
+        {
+          degree: "Master of IT",
+          institution: "Queensland University of Technology",
+          startDate: "2014-07-01",
+          endDate: "2015-06-30",
+        },
+      ],
+      skills: [{ name: "Java" }, { name: "C++" }, { name: "Python" }],
+    }
     const stub = sinon.stub(ResumeService.prototype, "findOne").resolves(resume)
 
     await resumeController.fetchOne(req, res)
@@ -281,7 +294,9 @@ describe("Resume fetching", () => {
       json: sinon.spy(),
     }
 
-    const stub = sinon.stub(ResumeService.prototype, "findOne").throws(new Error("Server Error"))
+    const stub = sinon
+      .stub(ResumeService.prototype, "findOne")
+      .throws(new Error("Server Error"))
 
     await resumeController.fetchOne(req, res)
 
@@ -295,45 +310,45 @@ describe("Resume fetching", () => {
 describe("Resume updating", () => {
   it("should update a resume successfully", async () => {
     const resume = {
-        templateId: new mongoose.Types.ObjectId(),
-        firstname: "John",
-        lastname: "Doe",
-        title: "Software Engineer",
-        email: "john@mail.com",
-        phone: "0000111222",
-        address: "1 Infinite Loop, Cupertino, CA",
-        summary: "This is a sample summary.",
-        workExperiences: [
-          {
-            companyName: "Sample Company 1",
-            startDate: "2020-01-20",
-            endDate: "2022-10-30",
-            responsibility: "Sample responsibility description",
-          },
-          {
-            companyName: "Sample Company 2",
-            startDate: "2023-02-01",
-            endDate: "2025-07-31",
-            responsibility: "Sample responsibility description 2",
-          },
-        ],
-        educations: [
-          {
-            degree: "Bachelor of Engineering",
-            institution: "The University of Queensland",
-            startDate: "2010-02-01",
-            endDate: "2014-01-31",
-          },
-          {
-            degree: "Master of IT",
-            institution: "Queensland University of Technology",
-            startDate: "2014-07-01",
-            endDate: "2015-06-30",
-          },
-        ],
-        skills: [{ name: "Java" }, { name: "C++" }, { name: "Python" }],
-        save: sinon.stub().returnsThis(),
-      }
+      templateId: new mongoose.Types.ObjectId(),
+      firstname: "John",
+      lastname: "Doe",
+      title: "Software Engineer",
+      email: "john@mail.com",
+      phone: "0000111222",
+      address: "1 Infinite Loop, Cupertino, CA",
+      summary: "This is a sample summary.",
+      workExperiences: [
+        {
+          companyName: "Sample Company 1",
+          startDate: "2020-01-20",
+          endDate: "2022-10-30",
+          responsibility: "Sample responsibility description",
+        },
+        {
+          companyName: "Sample Company 2",
+          startDate: "2023-02-01",
+          endDate: "2025-07-31",
+          responsibility: "Sample responsibility description 2",
+        },
+      ],
+      educations: [
+        {
+          degree: "Bachelor of Engineering",
+          institution: "The University of Queensland",
+          startDate: "2010-02-01",
+          endDate: "2014-01-31",
+        },
+        {
+          degree: "Master of IT",
+          institution: "Queensland University of Technology",
+          startDate: "2014-07-01",
+          endDate: "2015-06-30",
+        },
+      ],
+      skills: [{ name: "Java" }, { name: "C++" }, { name: "Python" }],
+      save: sinon.stub().returnsThis(),
+    }
     const req = {
       body: {
         ...resume,
@@ -355,7 +370,9 @@ describe("Resume updating", () => {
       status: sinon.stub().returnsThis(),
       json: sinon.spy(),
     }
-    const stub = sinon.stub(ResumeService.prototype, "findById").resolves(resume)
+    const stub = sinon
+      .stub(ResumeService.prototype, "findById")
+      .resolves(resume)
 
     await resumeController.update(req, res)
 
@@ -371,45 +388,45 @@ describe("Resume updating", () => {
 
   it("should return 404 if the resume was not found", async () => {
     const resume = {
-        templateId: new mongoose.Types.ObjectId(),
-        firstname: "John",
-        lastname: "Doe",
-        title: "Software Engineer",
-        email: "john@mail.com",
-        phone: "0000111222",
-        address: "1 Infinite Loop, Cupertino, CA",
-        summary: "This is a sample summary.",
-        workExperiences: [
-          {
-            companyName: "Sample Company 1",
-            startDate: "2020-01-20",
-            endDate: "2022-10-30",
-            responsibility: "Sample responsibility description",
-          },
-          {
-            companyName: "Sample Company 2",
-            startDate: "2023-02-01",
-            endDate: "2025-07-31",
-            responsibility: "Sample responsibility description 2",
-          },
-        ],
-        educations: [
-          {
-            degree: "Bachelor of Engineering",
-            institution: "The University of Queensland",
-            startDate: "2010-02-01",
-            endDate: "2014-01-31",
-          },
-          {
-            degree: "Master of IT",
-            institution: "Queensland University of Technology",
-            startDate: "2014-07-01",
-            endDate: "2015-06-30",
-          },
-        ],
-        skills: [{ name: "Java" }, { name: "C++" }, { name: "Python" }],
-        save: sinon.stub().returnsThis(),
-      }
+      templateId: new mongoose.Types.ObjectId(),
+      firstname: "John",
+      lastname: "Doe",
+      title: "Software Engineer",
+      email: "john@mail.com",
+      phone: "0000111222",
+      address: "1 Infinite Loop, Cupertino, CA",
+      summary: "This is a sample summary.",
+      workExperiences: [
+        {
+          companyName: "Sample Company 1",
+          startDate: "2020-01-20",
+          endDate: "2022-10-30",
+          responsibility: "Sample responsibility description",
+        },
+        {
+          companyName: "Sample Company 2",
+          startDate: "2023-02-01",
+          endDate: "2025-07-31",
+          responsibility: "Sample responsibility description 2",
+        },
+      ],
+      educations: [
+        {
+          degree: "Bachelor of Engineering",
+          institution: "The University of Queensland",
+          startDate: "2010-02-01",
+          endDate: "2014-01-31",
+        },
+        {
+          degree: "Master of IT",
+          institution: "Queensland University of Technology",
+          startDate: "2014-07-01",
+          endDate: "2015-06-30",
+        },
+      ],
+      skills: [{ name: "Java" }, { name: "C++" }, { name: "Python" }],
+      save: sinon.stub().returnsThis(),
+    }
     const req = {
       body: {
         ...resume,
@@ -432,7 +449,9 @@ describe("Resume updating", () => {
     }
     const nullResume = null
 
-    const stub = sinon.stub(ResumeService.prototype, "findById").resolves(nullResume)
+    const stub = sinon
+      .stub(ResumeService.prototype, "findById")
+      .resolves(nullResume)
 
     await resumeController.update(req, res)
 
@@ -445,45 +464,45 @@ describe("Resume updating", () => {
 
   it("should return 500 if an error other than not-found occurs when trying to find the resume", async () => {
     const resume = {
-        templateId: new mongoose.Types.ObjectId(),
-        firstname: "John",
-        lastname: "Doe",
-        title: "Software Engineer",
-        email: "john@mail.com",
-        phone: "0000111222",
-        address: "1 Infinite Loop, Cupertino, CA",
-        summary: "This is a sample summary.",
-        workExperiences: [
-          {
-            companyName: "Sample Company 1",
-            startDate: "2020-01-20",
-            endDate: "2022-10-30",
-            responsibility: "Sample responsibility description",
-          },
-          {
-            companyName: "Sample Company 2",
-            startDate: "2023-02-01",
-            endDate: "2025-07-31",
-            responsibility: "Sample responsibility description 2",
-          },
-        ],
-        educations: [
-          {
-            degree: "Bachelor of Engineering",
-            institution: "The University of Queensland",
-            startDate: "2010-02-01",
-            endDate: "2014-01-31",
-          },
-          {
-            degree: "Master of IT",
-            institution: "Queensland University of Technology",
-            startDate: "2014-07-01",
-            endDate: "2015-06-30",
-          },
-        ],
-        skills: [{ name: "Java" }, { name: "C++" }, { name: "Python" }],
-        save: sinon.stub().returnsThis(),
-      }
+      templateId: new mongoose.Types.ObjectId(),
+      firstname: "John",
+      lastname: "Doe",
+      title: "Software Engineer",
+      email: "john@mail.com",
+      phone: "0000111222",
+      address: "1 Infinite Loop, Cupertino, CA",
+      summary: "This is a sample summary.",
+      workExperiences: [
+        {
+          companyName: "Sample Company 1",
+          startDate: "2020-01-20",
+          endDate: "2022-10-30",
+          responsibility: "Sample responsibility description",
+        },
+        {
+          companyName: "Sample Company 2",
+          startDate: "2023-02-01",
+          endDate: "2025-07-31",
+          responsibility: "Sample responsibility description 2",
+        },
+      ],
+      educations: [
+        {
+          degree: "Bachelor of Engineering",
+          institution: "The University of Queensland",
+          startDate: "2010-02-01",
+          endDate: "2014-01-31",
+        },
+        {
+          degree: "Master of IT",
+          institution: "Queensland University of Technology",
+          startDate: "2014-07-01",
+          endDate: "2015-06-30",
+        },
+      ],
+      skills: [{ name: "Java" }, { name: "C++" }, { name: "Python" }],
+      save: sinon.stub().returnsThis(),
+    }
     const req = {
       body: resume,
       params: { id: new mongoose.Types.ObjectId() },
@@ -493,57 +512,60 @@ describe("Resume updating", () => {
       json: sinon.spy(),
     }
 
-    const stub = sinon.stub(ResumeService.prototype, "findById").throws(new Error('An unknown error occurred'))
+    const stub = sinon
+      .stub(ResumeService.prototype, "findById")
+      .throws(new Error("An unknown error occurred"))
 
     await resumeController.update(req, res)
 
     expect(res.status.calledWith(500)).to.be.true
-    expect(res.json.calledWith({ message: 'An unknown error occurred' })).to.be.true
+    expect(res.json.calledWith({ message: "An unknown error occurred" })).to.be
+      .true
 
     stub.restore()
   })
 
   it("should return 500 if an error other than not-found occurs when trying to save", async () => {
     const resume = {
-        templateId: new mongoose.Types.ObjectId(),
-        firstname: "John",
-        lastname: "Doe",
-        title: "Software Engineer",
-        email: "john@mail.com",
-        phone: "0000111222",
-        address: "1 Infinite Loop, Cupertino, CA",
-        summary: "This is a sample summary.",
-        workExperiences: [
-          {
-            companyName: "Sample Company 1",
-            startDate: "2020-01-20",
-            endDate: "2022-10-30",
-            responsibility: "Sample responsibility description",
-          },
-          {
-            companyName: "Sample Company 2",
-            startDate: "2023-02-01",
-            endDate: "2025-07-31",
-            responsibility: "Sample responsibility description 2",
-          },
-        ],
-        educations: [
-          {
-            degree: "Bachelor of Engineering",
-            institution: "The University of Queensland",
-            startDate: "2010-02-01",
-            endDate: "2014-01-31",
-          },
-          {
-            degree: "Master of IT",
-            institution: "Queensland University of Technology",
-            startDate: "2014-07-01",
-            endDate: "2015-06-30",
-          },
-        ],
-        skills: [{ name: "Java" }, { name: "C++" }, { name: "Python" }],
-        save: sinon.stub().throws(new Error('Failed to save')),
-      }
+      templateId: new mongoose.Types.ObjectId(),
+      firstname: "John",
+      lastname: "Doe",
+      title: "Software Engineer",
+      email: "john@mail.com",
+      phone: "0000111222",
+      address: "1 Infinite Loop, Cupertino, CA",
+      summary: "This is a sample summary.",
+      workExperiences: [
+        {
+          companyName: "Sample Company 1",
+          startDate: "2020-01-20",
+          endDate: "2022-10-30",
+          responsibility: "Sample responsibility description",
+        },
+        {
+          companyName: "Sample Company 2",
+          startDate: "2023-02-01",
+          endDate: "2025-07-31",
+          responsibility: "Sample responsibility description 2",
+        },
+      ],
+      educations: [
+        {
+          degree: "Bachelor of Engineering",
+          institution: "The University of Queensland",
+          startDate: "2010-02-01",
+          endDate: "2014-01-31",
+        },
+        {
+          degree: "Master of IT",
+          institution: "Queensland University of Technology",
+          startDate: "2014-07-01",
+          endDate: "2015-06-30",
+        },
+      ],
+      skills: [{ name: "Java" }, { name: "C++" }, { name: "Python" }],
+      save: sinon.stub().throws(new Error("Failed to save")),
+    }
     const req = {
       body: resume,
       params: { id: new mongoose.Types.ObjectId() },
@@ -553,19 +575,21 @@ describe("Resume updating", () => {
       json: sinon.spy(),
     }
 
-    const stub = sinon.stub(ResumeService.prototype, "findById").resolves(resume)
+    const stub = sinon
+      .stub(ResumeService.prototype, "findById")
+      .resolves(resume)
 
     await resumeController.update(req, res)
 
     expect(res.status.calledWith(500)).to.be.true
-    expect(res.json.calledWith({ message: 'Failed to save' })).to.be.true
+    expect(res.json.calledWith({ message: "Failed to save" })).to.be.true
 
     stub.restore()
   })
 })
 
-describe('Resume deletion', () => {
-  it('should delete the resume successfully', async () => {
+describe("Resume deletion", () => {
+  it("should delete the resume successfully", async () => {
     const resume = {
       remove: sinon.stub().resolves(),
     }
@@ -575,13 +599,15 @@ describe('Resume deletion', () => {
     const res = {
       json: sinon.spy(),
     }
-    const stub = sinon.stub(ResumeService.prototype, 'findById').resolves(resume)
+    const stub = sinon
+      .stub(ResumeService.prototype, "findById")
+      .resolves(resume)
 
     await resumeController.delete(req, res)
 
     expect(stub.calledOnceWith(req.params.id)).to.be.true
     expect(resume.remove.calledOnce).to.be.true
-    expect(res.json.calledWith({message: "Resume deleted"})).to.be.true
+    expect(res.json.calledWith({ message: "Resume deleted" })).to.be.true
 
     stub.restore()
   })
@@ -613,7 +639,9 @@ describe("Cover letter creation", () => {
       userId: req.user.id,
     }
 
-    const stub = sinon.stub(CoverLetterService.prototype, "create").resolves(newCoverLetter)
+    const stub = sinon
+      .stub(CoverLetterService.prototype, "create")
+      .resolves(newCoverLetter)
 
     await coverLetterController.create(req, res)
 
@@ -625,7 +653,9 @@ describe("Cover letter creation", () => {
   })
 
   it("should return 500 if an error occurs", async () => {
-    const stub = sinon.stub(CoverLetterService.prototype, "create").throws(new Error("Server Error"))
+    const stub = sinon
+      .stub(CoverLetterService.prototype, "create")
+      .throws(new Error("Server Error"))
 
     await coverLetterController.create(req, res)
 
@@ -665,7 +695,9 @@ describe("Cover letter fetching", () => {
       status: sinon.stub().returnsThis(),
       json: sinon.spy(),
     }
-    const stub = sinon.stub(CoverLetterService.prototype, "findAll").resolves(coverLetters)
+    const stub = sinon
+      .stub(CoverLetterService.prototype, "findAll")
+      .resolves(coverLetters)
 
     await coverLetterController.fetchAll(req, res)
 
@@ -685,15 +717,17 @@ describe("Cover letter fetching", () => {
       json: sinon.spy(),
     }
     const coverLetter = {
-        firstname: "John",
-        lastname: "Doe",
-        email: "john@mail.com",
-        phone: "0000111222",
-        creationDate: "2024-10-01",
-        employer: "Sample Employer",
-        body: "This is a sample cover letter body.",
-      }
-    const stub = sinon.stub(CoverLetterService.prototype, "findOne").resolves(coverLetter)
+      firstname: "John",
+      lastname: "Doe",
+      email: "john@mail.com",
+      phone: "0000111222",
+      creationDate: "2024-10-01",
+      employer: "Sample Employer",
+      body: "This is a sample cover letter body.",
+    }
+    const stub = sinon
+      .stub(CoverLetterService.prototype, "findOne")
+      .resolves(coverLetter)
 
     await coverLetterController.fetchOne(req, res)
 
@@ -715,12 +749,15 @@ describe("Cover letter fetching", () => {
     }
     const coverLetter = null
 
-    const stub = sinon.stub(CoverLetterService.prototype, "findOne").resolves(coverLetter)
+    const stub = sinon
+      .stub(CoverLetterService.prototype, "findOne")
+      .resolves(coverLetter)
 
     await coverLetterController.fetchOne(req, res)
 
     expect(res.status.calledWith(404)).to.be.true
-    expect(res.json.calledWith({ message: "Cover letter not found" })).to.be.true
+    expect(res.json.calledWith({ message: "Cover letter not found" })).to.be
+      .true
 
     stub.restore()
   })
@@ -735,7 +772,9 @@ describe("Cover letter fetching", () => {
       json: sinon.spy(),
     }
 
-    const stub = sinon.stub(CoverLetterService.prototype, "findOne").throws(new Error("Server Error"))
+    const stub = sinon
+      .stub(CoverLetterService.prototype, "findOne")
+      .throws(new Error("Server Error"))
 
     await coverLetterController.fetchOne(req, res)
 
@@ -749,15 +788,15 @@ describe("Cover letter fetching", () => {
 describe("Cover Letter updating", () => {
   it("should update a cover letter successfully", async () => {
     const coverLetter = {
-        firstname: "John",
-        lastname: "Doe",
-        email: "john@mail.com",
-        phone: "0000111222",
-        creationDate: "2024-10-01",
-        employer: "Sample Employer",
-        body: "This is a sample cover letter body.",
-        save: sinon.stub().returnsThis(),
-      }
+      firstname: "John",
+      lastname: "Doe",
+      email: "john@mail.com",
+      phone: "0000111222",
+      creationDate: "2024-10-01",
+      employer: "Sample Employer",
+      body: "This is a sample cover letter body.",
+      save: sinon.stub().returnsThis(),
+    }
     const req = {
       body: {
         ...coverLetter,
@@ -770,7 +809,9 @@ describe("Cover Letter updating", () => {
       status: sinon.stub().returnsThis(),
       json: sinon.spy(),
     }
-    const stub = sinon.stub(CoverLetterService.prototype, "findById").resolves(coverLetter)
+    const stub = sinon
+      .stub(CoverLetterService.prototype, "findById")
+      .resolves(coverLetter)
 
     await coverLetterController.update(req, res)
 
@@ -785,15 +826,15 @@ describe("Cover Letter updating", () => {
 
   it("should return 404 if the cover letter was not found", async () => {
     const coverLetter = {
-        firstname: "John",
-        lastname: "Doe",
-        email: "john@mail.com",
-        phone: "0000111222",
-        creationDate: "2024-10-01",
-        employer: "Sample Employer",
-        body: "This is a sample cover letter body.",
-        save: sinon.stub().returnsThis(),
-      }
+      firstname: "John",
+      lastname: "Doe",
+      email: "john@mail.com",
+      phone: "0000111222",
+      creationDate: "2024-10-01",
+      employer: "Sample Employer",
+      body: "This is a sample cover letter body.",
+      save: sinon.stub().returnsThis(),
+    }
     const req = {
       body: {
         ...coverLetter,
@@ -808,28 +849,31 @@ describe("Cover Letter updating", () => {
     }
     const nullCoverLetter = null
 
-    const stub = sinon.stub(CoverLetterService.prototype, "findById").resolves(nullCoverLetter)
+    const stub = sinon
+      .stub(CoverLetterService.prototype, "findById")
+      .resolves(nullCoverLetter)
 
     await coverLetterController.update(req, res)
 
     expect(stub.calledOnceWith(req.params.id)).to.be.true
     expect(res.status.calledWith(404)).to.be.true
-    expect(res.json.calledWith({ message: "Cover letter not found" })).to.be.true
+    expect(res.json.calledWith({ message: "Cover letter not found" })).to.be
+      .true
 
     stub.restore()
   })
 
   it("should return 500 if an error other than not-found occurs when trying to find the cover letter", async () => {
     const coverLetter = {
-        firstname: "John",
-        lastname: "Doe",
-        email: "john@mail.com",
-        phone: "0000111222",
-        creationDate: "2024-10-01",
-        employer: "Sample Employer",
-        body: "This is a sample cover letter body.",
-        save: sinon.stub().returnsThis(),
-      }
+      firstname: "John",
+      lastname: "Doe",
+      email: "john@mail.com",
+      phone: "0000111222",
+      creationDate: "2024-10-01",
+      employer: "Sample Employer",
+      body: "This is a sample cover letter body.",
+      save: sinon.stub().returnsThis(),
+    }
     const req = {
       body: coverLetter,
       params: { id: new mongoose.Types.ObjectId() },
@@ -839,27 +883,30 @@ describe("Cover Letter updating", () => {
       json: sinon.spy(),
     }
 
-    const stub = sinon.stub(CoverLetterService.prototype, "findById").throws(new Error('An unknown error occurred'))
+    const stub = sinon
+      .stub(CoverLetterService.prototype, "findById")
+      .throws(new Error("An unknown error occurred"))
 
     await coverLetterController.update(req, res)
 
     expect(res.status.calledWith(500)).to.be.true
-    expect(res.json.calledWith({ message: 'An unknown error occurred' })).to.be.true
+    expect(res.json.calledWith({ message: "An unknown error occurred" })).to.be
+      .true
 
     stub.restore()
   })
 
   it("should return 500 if an error other than not-found occurs when trying to save", async () => {
     const coverLetter = {
-        firstname: "John",
-        lastname: "Doe",
-        email: "john@mail.com",
-        phone: "0000111222",
-        creationDate: "2024-10-01",
-        employer: "Sample Employer",
-        body: "This is a sample cover letter body.",
-        save: sinon.stub().throws(new Error('Failed to save')),
-      }
+      firstname: "John",
+      lastname: "Doe",
+      email: "john@mail.com",
+      phone: "0000111222",
+      creationDate: "2024-10-01",
+      employer: "Sample Employer",
+      body: "This is a sample cover letter body.",
+      save: sinon.stub().throws(new Error("Failed to save")),
+    }
     const req = {
       body: coverLetter,
       params: { id: new mongoose.Types.ObjectId() },
@@ -869,19 +916,21 @@ describe("Cover Letter updating", () => {
       json: sinon.spy(),
     }
 
-    const stub = sinon.stub(CoverLetterService.prototype, "findById").resolves(coverLetter)
+    const stub = sinon
+      .stub(CoverLetterService.prototype, "findById")
+      .resolves(coverLetter)
 
     await coverLetterController.update(req, res)
 
     expect(res.status.calledWith(500)).to.be.true
-    expect(res.json.calledWith({ message: 'Failed to save' })).to.be.true
+    expect(res.json.calledWith({ message: "Failed to save" })).to.be.true
 
     stub.restore()
   })
 })
 
-describe('Cover Letter deletion', () => {
-  it('should delete the cover letter successfully', async () => {
+describe("Cover Letter deletion", () => {
+  it("should delete the cover letter successfully", async () => {
     const coverLetter = {
       remove: sinon.stub().resolves(),
     }
@@ -891,13 +940,154 @@ describe('Cover Letter deletion', () => {
     const res = {
       json: sinon.spy(),
     }
-    const stub = sinon.stub(CoverLetterService.prototype, 'findById').resolves(coverLetter)
+    const stub = sinon
+      .stub(CoverLetterService.prototype, "findById")
+      .resolves(coverLetter)
 
     await coverLetterController.delete(req, res)
 
     expect(stub.calledOnceWith(req.params.id)).to.be.true
     expect(coverLetter.remove.calledOnce).to.be.true
-    expect(res.json.calledWith({message: "Cover letter deleted"})).to.be.true
+    expect(res.json.calledWith({ message: "Cover letter deleted" })).to.be.true
+
+    stub.restore()
+  })
+})
+
+// Subscribe/unsubscribe
+describe("Subscribe", () => {
+  it("should subscribe successfully", async () => {
+    const user = {
+      id: new mongoose.Types.ObjectId(),
+      username: "testuser",
+      email: "testuser@mail.com",
+      password: "hashedpassword",
+      university: "Test University",
+      address: "123 Test St, Test City",
+      subscribed: false,
+      save: sinon.stub().returnsThis(),
+    }
+    const req = {
+      body: {
+        ...user,
+        subscribed: true,
+      },
+      user: { id: user.id },
+    }
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    }
+    const stub = sinon.stub(UserService.prototype, "findById").resolves(user)
+
+    await userController.update(req, res)
+
+    expect(stub.calledOnceWith(req.user.id)).to.be.true
+    expect(user.save.calledOnce).to.be.true
+    expect(user.subscribed).to.equal(req.body.subscribed)
+
+    stub.restore()
+  })
+
+  it("should return 404 if the user was not found", async () => {
+    const user = {
+      id: new mongoose.Types.ObjectId(),
+      username: "testuser",
+      email: "testuser@mail.com",
+      password: "hashedpassword",
+      university: "Test University",
+      address: "123 Test St, Test City",
+      subscribed: false,
+      save: sinon.stub().returnsThis(),
+    }
+    const req = {
+      body: {
+        ...user,
+        subscribed: true,
+      },
+      user: { id: user.id },
+    }
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    }
+    const nullUser = null
+
+    const stub = sinon
+      .stub(UserService.prototype, "findById")
+      .resolves(nullUser)
+
+    await userController.update(req, res)
+
+    expect(stub.calledOnceWith(req.user.id)).to.be.true
+    expect(res.status.calledWith(404)).to.be.true
+    expect(res.json.calledWith({ message: "User not found" })).to.be
+      .true
+
+    stub.restore()
+  })
+
+  it("should return 500 if an error other than not-found occurs when trying to find the user", async () => {
+    const user = {
+      id: new mongoose.Types.ObjectId(),
+      username: "testuser",
+      email: "testuser@mail.com",
+      password: "hashedpassword",
+      university: "Test University",
+      address: "123 Test St, Test City",
+      subscribed: false,
+      save: sinon.stub().returnsThis(),
+    }
+    const req = {
+      body: user,
+      user: { id: user.id },
+    }
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    }
+
+    const stub = sinon
+      .stub(UserService.prototype, "findById")
+      .throws(new Error("An unknown error occurred"))
+
+    await userController.update(req, res)
+
+    expect(res.status.calledWith(500)).to.be.true
+    expect(res.json.calledWith({ message: "An unknown error occurred" })).to.be
+      .true
+
+    stub.restore()
+  })
+
+  it("should return 500 if an error other than not-found occurs when trying to save", async () => {
+    const user = {
+      id: new mongoose.Types.ObjectId(),
+      username: "testuser",
+      email: "testuser@mail.com",
+      password: "hashedpassword",
+      university: "Test University",
+      address: "123 Test St, Test City",
+      subscribed: false,
+      save: sinon.stub().throws(new Error("Failed to save")),
+    }
+    const req = {
+      body: user,
+      user: { id: user.id },
+    }
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.spy(),
+    }
+
+    const stub = sinon
+      .stub(UserService.prototype, "findById")
+      .resolves(user)
+
+    await userController.update(req, res)
+
+    expect(res.status.calledWith(500)).to.be.true
+    expect(res.json.calledWith({ message: "Failed to save" })).to.be.true
 
     stub.restore()
   })

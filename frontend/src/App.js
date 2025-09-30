@@ -16,6 +16,7 @@ import ResumeCreation from "./pages/ResumeCreation"
 import CoverLetterCreation from "./pages/CoverLetterCreation"
 import ResumeUpdate from "./pages/ResumeUpdate"
 import CoverLetterUpdate from "./pages/CoverLetterUpdate"
+import Subscription from "./pages/Subscription"
 import { useAuth } from "./context/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
 
@@ -104,6 +105,14 @@ function App() {
           element={
             <ProtectedRoute user={user}>
               <CoverLetterDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/subscribe"
+          element={
+            <ProtectedRoute user={user}>
+              <Subscription />
             </ProtectedRoute>
           }
         />

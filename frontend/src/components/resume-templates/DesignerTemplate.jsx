@@ -1,6 +1,7 @@
 import './template.css'
+import { Tag } from '../Tag'
 
-const DesignerTemplate = ({data, size = 'full', customClasses = ''}) => {
+const DesignerTemplate = ({data, size = 'full', customClasses = '', premium}) => {
   const {firstname, lastname, email, phone, summary, workExperiences, educations} = data
   let className
   if (size === 'thumbnail') {
@@ -11,6 +12,7 @@ const DesignerTemplate = ({data, size = 'full', customClasses = ''}) => {
   return (
     <div className={`designer-temp ${className} ${customClasses} relative border rounded-lg bg-orange-100/30 h-full`}>
       <div>
+        {premium && (<Tag className="absolute left-0 top-0 z-50 rounded-tl">Premium</Tag>)}
         <div className="title flex justify-between items-end relative z-10">
           {/* name */}
           <h1 className="font-bold font-playfair">{firstname} {lastname}</h1>
