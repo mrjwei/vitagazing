@@ -112,6 +112,56 @@ const CoverLetter = modelFactory(
 //   { timestamps: true }
 // )
 
+// for blog feature
+const Blog = modelFactory(
+  "Blog",
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    content: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String,
+      required: true
+    },
+    // Fields for strategy pattern
+    status: {
+      type: String,
+      enum: ['draft', 'published', 'scheduled'], // Strategies control these values
+      default: 'draft'
+    },
+    slug: {
+      type: String,
+      unique: true,
+      sparse: true
+    },
+    publishedAt: {
+      type: Date,
+      default: null
+    },
+    scheduleDate: {
+      type: Date,
+      default: null
+    },
+    tags: [{
+      type: String
+    }]
+  },
+  { 
+    timestamps: true 
+  }
+);
+
 module.exports = {
   User,
   Resume,
@@ -120,4 +170,5 @@ module.exports = {
   WorkExperience,
   Education,
   Skill,
+  Blog
 }

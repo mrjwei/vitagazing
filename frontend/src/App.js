@@ -18,6 +18,10 @@ import ResumeUpdate from "./pages/ResumeUpdate"
 import CoverLetterUpdate from "./pages/CoverLetterUpdate"
 import { useAuth } from "./context/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
+import Blogs from "./pages/Blogs";
+import BlogCreation from "./pages/BlogCreation";
+import BlogDetail from "./pages/BlogDetail";
+import BlogUpdate from "./pages/BlogUpdate";
 
 function App() {
   const { user } = useAuth()
@@ -107,6 +111,38 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/blogs"
+  element={
+    <ProtectedRoute user={user}>
+      <Blogs />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/blogs/new"
+  element={
+    <ProtectedRoute user={user}>
+      <BlogCreation />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/blogs/:id"
+  element={
+    <ProtectedRoute user={user}>
+      <BlogDetail />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/blogs/:id/edit"
+  element={
+    <ProtectedRoute user={user}>
+      <BlogUpdate />
+    </ProtectedRoute>
+  }
+/>
       </Routes>
     </Router>
   )
