@@ -1,13 +1,15 @@
 const bcrypt = require("bcrypt")
 const UserService = require("../services/user")
+const BaseController = require("./base")
 const { generateToken } = require("../lib/helpers");
 
-class UserController {
+class UserController extends BaseController {
   constructor() {
-    this.service = new UserService()
+    super(new UserService())
   }
 
-  async register(req, res) {
+  // Override create method for user registration
+  async create(req, res) {
     const { username, email, password } = req.body
     try {
       const userExists = await this.service.findOne({ email })
@@ -24,6 +26,7 @@ class UserController {
     }
   }
 
+  // New method for user login
   async login(req, res) {
     const { email, password } = req.body
     try {
@@ -40,6 +43,8 @@ class UserController {
       res.status(500).json({ message: error.message })
     }
   }
+
+  // New method to fetch user profile
   async fetchById(req, res) {
     try {
       const user = await this.service.findById(req.user.id)
@@ -51,14 +56,8 @@ class UserController {
       res.status(500).json({ message: error.message })
     }
   }
-  async fetchAll(req, res) {
-    try {
-      const users = await this.service.findAll()
-      res.status(200).json(users)
-    } catch (error) {
-      res.status(500).json({ message: error.message })
-    }
-  }
+
+  // Override update method for user profile update
   async update(req, res) {
     try {
       const user = await this.service.findById(req.user.id)

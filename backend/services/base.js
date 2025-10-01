@@ -9,6 +9,9 @@ class BaseService {
   async findOne(query) {
     return this.model.findOne(query)
   }
+  async findById(id) {
+    return await this.model.findById(id)
+  }
   async findAll(query) {
     return this.model.find(query)
   }
