@@ -18,6 +18,7 @@ import ResumeUpdate from "./pages/ResumeUpdate"
 import CoverLetterUpdate from "./pages/CoverLetterUpdate"
 import Subscription from "./pages/Subscription"
 import Blog from "./pages/Blog"
+import PostCreation from "./pages/PostCreation"
 import { useAuth } from "./context/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
 
@@ -122,6 +123,14 @@ function App() {
           element={
             <ProtectedRoute user={user}>
               <Blog />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/blog/new"
+          element={
+            <ProtectedRoute user={user}>
+              <PostCreation />
             </ProtectedRoute>
           }
         />
