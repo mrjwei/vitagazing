@@ -6,7 +6,7 @@ import html2canvas from "html2canvas"
 import jsPDF from "jspdf"
 import { useAuth } from "../context/AuthContext"
 import axiosInstance from "../axiosConfig"
-import { templates } from "../data"
+import { getResumeTemplateComponent } from "../strategies"
 import Navbar from "../components/Navbar"
 import Breadcrumb from "../components/Breadcrumb"
 
@@ -23,15 +23,10 @@ const ResumeDetail = () => {
 
   const hiddenResumeRefs = useRef({})
 
-  const Component = useMemo(() => {
-    if (resume) {
-      const template = templates.find(t => t.id === resume.templateId)
-      if (template) {
-        return template.component
-      }
-    }
-    return templates.find(t => t.id === "default").component
-  }, [resume])
+  const TemplateComponent = useMemo(
+    () => getResumeTemplateComponent(resume?.templateId),
+    [resume?.templateId]
+  )
 
   useEffect(() => {
     const fetchResume = async () => {
@@ -85,7 +80,7 @@ const ResumeDetail = () => {
       <div className="container mx-auto lg:max-w-[960px] px-8 py-[88px]">
         <Breadcrumb linkList={linkList} />
         <h1 className="text-3xl font-bold mt-2 mb-8">Resume Detail</h1>
-        <Component
+        <TemplateComponent
           data={resume}
           size="full"
           customClasses="!w-full !max-w-full"
@@ -94,7 +89,7 @@ const ResumeDetail = () => {
           className="absolute -left-[9999px] w-[210mm] h-[297mm]"
           ref={(el) => (hiddenResumeRefs.current[resume._id] = el)}
         >
-          <Component data={resume} size="full" customClasses="!m-0" />
+          <TemplateComponent data={resume} size="full" customClasses="!m-0" />
         </div>
         <div className="flex justify-between items-center">
           <Link

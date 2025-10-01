@@ -10,8 +10,7 @@ import {
 } from "@heroicons/react/24/outline"
 import { useAuth } from "../context/AuthContext"
 import axiosInstance from "../axiosConfig"
-import DefaultTemplate from "./resume-templates/DefaultTemplate"
-import { templates } from "../data"
+import { getResumeTemplateComponent } from "../strategies"
 
 const ResumeList = ({ resumes, setResumes }) => {
   const { user } = useAuth()
@@ -49,42 +48,26 @@ const ResumeList = ({ resumes, setResumes }) => {
   return (
     <div className="grid grid-cols-12 gap-6">
       {resumes.map((resume) => {
-        const TemplateComp = templates.find(t => t.id === resume.templateId)?.component
+        const TemplateComp = getResumeTemplateComponent(resume.templateId)
         return (
           <div
             key={resume._id}
             className="col col-span-12 md:col-span-6 lg:col-span-4 flex flex-col bg-white rounded-lg p-4 shadow-md"
           >
             <Link to={`/resumes/${resume._id}`} className="flex-1">
-              {TemplateComp ? (
-                <>
-                  <TemplateComp data={resume} size="thumbnail" />
-                  <div
-                    className="absolute -left-[9999px] w-[210mm] h-[297mm]"
-                    ref={(el) => (hiddenResumeRefs.current[resume._id] = el)}
-                  >
-                    <TemplateComp
-                      data={resume}
-                      size="full"
-                      customClasses="!m-0"
-                    />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <DefaultTemplate data={resume} size="thumbnail" />
-                  <div
-                    className="absolute -left-[9999px] w-[210mm] h-[297mm]"
-                    ref={(el) => (hiddenResumeRefs.current[resume._id] = el)}
-                  >
-                    <DefaultTemplate
-                      data={resume}
-                      size="full"
-                      customClasses="!m-0"
-                    />
-                  </div>
-                </>
-              )}
+              <>
+                <TemplateComp data={resume} size="thumbnail" />
+                <div
+                  className="absolute -left-[9999px] w-[210mm] h-[297mm]"
+                  ref={(el) => (hiddenResumeRefs.current[resume._id] = el)}
+                >
+                  <TemplateComp
+                    data={resume}
+                    size="full"
+                    customClasses="!m-0"
+                  />
+                </div>
+              </>
             </Link>
             <div className="mt-4 flex justify-between items-center">
               <button

@@ -1,18 +1,25 @@
-import { useState, useEffect } from "react"
+import React from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import axiosInstance from "../axiosConfig"
-import { templates } from "../data"
 import Navbar from "../components/Navbar"
+import { listResumeTemplateStrategies } from "../strategies"
 
 const TemplateList = () => {
   const navigate = useNavigate()
   const { resumeId } = useParams()
   const { user } = useAuth()
+  const userRef = React.useRef(user)
   const [resume, setResume] = useState()
-  const [selected, setSelected] = useState('default')
+  const [selected, setSelected] = useState("default")
+  const templateStrategies = useMemo(
+    () => listResumeTemplateStrategies(),
+    []
+  )
 
   useEffect(() => {
+    userRef.current = JSON.parse(localStorage.getItem('user'))
     const fetchResume = async () => {
       try {
         const response = await axiosInstance.get(`/api/resumes/${resumeId}`, {
@@ -24,7 +31,6 @@ const TemplateList = () => {
         alert("Failed to fetch resume.")
       }
     }
-
     fetchResume()
   }, [user, resumeId])
 
@@ -39,7 +45,7 @@ const TemplateList = () => {
     try {
       await axiosInstance.put(
         `/api/resumes/${resumeId}`,
-        { template },
+        { templateId: template },
         {
           headers: { Authorization: `Bearer ${user.token}` },
         }
@@ -49,40 +55,125 @@ const TemplateList = () => {
       alert("Failed to apply template.")
     }
   }
+
+  const handleClickUpgrade = () => {
+    localStorage.setItem("prevURL", window.location.pathname)
+    navigate(`/subscribe`)
+  }
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <div className="container mx-auto px-8 py-[88px]">
         <h1 className="text-3xl font-bold mt-2 mb-8">My Resumes</h1>
         <form method="post" onSubmit={handleSubmit}>
           <div className="grid grid-cols-12 gap-8">
-            {templates.map((template) => {
-              const Component = template.component
-              return (
-                <div
-                  className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between ${selected === template.id ? "border-violet-600 border-4" : "border-gray-200 border-2"}`}
-                  key={template.id}
-                  onClick={() => setSelected(template.id)}
-                >
-                  <Component
-                    data={resume}
-                    size="thumbnail"
-                    customClasses="!border-0"
-                  />
-                  <label
-                    key={template.id}
-                    className={`flex gap-4 px-8 py-4 ${selected === template.id ? "bg-violet-600 text-white" : "bg-gray-100"}`}
+            {templateStrategies.map((strategy) => {
+              const Component = strategy.getComponent()
+              const templateId = strategy.getId()
+              const templateName = strategy.getName()
+              const isPremium = strategy.isPremium()
+              if (userRef.current.subscribed === true) {
+                return (
+                  <div
+                    className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between border-gray-200 ${selected === templateId ? "border-violet-600 border-4" : "border-gray-200 border-2"}`}
+                    key={templateId}
+                    onClick={() => setSelected(templateId)}
                   >
-                    <input
-                      type="radio"
-                      name="template"
-                      value={template.id}
-                      className="block w-6"
-                      checked={selected === template.id}
-                      onChange={() => setSelected(template.id)}
+                    <Component
+                      data={resume}
+                      size="thumbnail"
+                      customClasses="!border-0"
+                      premium={false}
                     />
-                    <span className="text-lg font-medium">{template.name}</span>
-                  </label>
+                    <label
+                      key={templateId}
+                      className={`flex gap-4 px-8 py-4 rounded-b-lg ${selected === templateId ? "bg-violet-600 text-white" : "bg-gray-100"}`}
+                    >
+                      <input
+                        type="radio"
+                        name="template"
+                        value={templateId}
+                        className="block w-6"
+                        checked={selected === templateId}
+                        onChange={() => setSelected(templateId)}
+                      />
+                      <span className="text-lg font-medium">
+                        {templateName}
+                      </span>
+                    </label>
+                  </div>
+                )
+              }
+              return isPremium ? (
+                <div
+                  className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between border-gray-200 border-2 relative`}
+                  key={templateId}
+                  onClick={() => setSelected(templateId)}
+                >
+                  <div className="absolute w-full h-full rounded-xl bg-black opacity-50 z-20"></div>
+                  <button onClick={handleClickUpgrade} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-violet-700 font-semibold px-4 py-2 rounded hover:bg-violet-800 hover:text-white transition-all duration-300 ease-in-out z-50">
+                    Upgrade
+                  </button>
+                  <div
+                    className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between border-gray-200 border-2}`}
+                    key={templateId}
+                  >
+                    <Component
+                      data={resume}
+                      size="thumbnail"
+                      customClasses="!border-0"
+                      premium={isPremium}
+                    />
+                    <label
+                      key={templateId}
+                      className={`flex gap-4 px-8 py-4 bg-gray-100}`}
+                    >
+                      <input
+                        type="radio"
+                        name="template"
+                        className="block w-6"
+                        disabled
+                      />
+                      <span className="text-lg font-medium">
+                        {templateName}
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              ) : (
+                <div
+                  className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between border-gray-200 border-2`}
+                  key={templateId}
+                  onClick={() => setSelected(templateId)}
+                >
+                  <div
+                  className={`col col-span-12 md:col-span-6 lg:col-span-4 rounded-xl flex flex-col justify-between ${selected === templateId ? "border-violet-600 border-4" : "border-gray-200 border-2"}`}
+                    key={templateId}
+                    onClick={() => setSelected(templateId)}
+                  >
+                    <Component
+                      data={resume}
+                      size="thumbnail"
+                      customClasses="!border-0"
+                      premium={isPremium}
+                    />
+                    <label
+                      key={templateId}
+                      className={`flex gap-4 px-8 py-4 ${selected === templateId ? "bg-violet-600 text-white" : "bg-gray-100"}`}
+                    >
+                      <input
+                        type="radio"
+                        name="template"
+                        value={templateId}
+                        className="block w-6"
+                        checked={selected === templateId}
+                        onChange={() => setSelected(templateId)}
+                      />
+                      <span className="text-lg font-medium">
+                        {templateName}
+                      </span>
+                    </label>
+                  </div>
                 </div>
               )
             })}
