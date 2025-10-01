@@ -11,6 +11,7 @@ app.use("/api/auth", require("./routes/authRoutes"))
 app.use("/api/resumes", require("./routes/resumeRoutes"))
 app.use("/api/cover-letters", require("./routes/coverLetterRoutes"))
 app.use("/api/subscribe", require("./routes/subscriptionRoutes"))
+app.use("/api/blog", require("./routes/blogRoutes"))
 
 // Export the app object for testing
 if (require.main === module) {
