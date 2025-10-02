@@ -2,6 +2,7 @@ const { Resume } = require("../models")
 const BaseService = require("./base")
 const emitter = require("../events")
 const { getResumeCreationStrategy } = require("../strategies/resumeCreation")
+const emitter = require("../events")
 
 class ResumeService extends BaseService {
   constructor(strategyResolver = getResumeCreationStrategy) {
