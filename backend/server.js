@@ -23,6 +23,7 @@ app.use("/api/resumes", require("./routes/resumeRoutes"))
 app.use("/api/cover-letters", require("./routes/coverLetterRoutes"))
 app.use("/api/subscribe", require("./routes/subscriptionRoutes"))
 app.use("/api/blog", require("./routes/blogRoutes"))
+app.use('/api/job-boards', require('./routes/jobBoardRoutes'));
 
 // Export the app object for testing
 if (require.main === module) {
