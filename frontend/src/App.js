@@ -19,6 +19,7 @@ import CoverLetterUpdate from "./pages/CoverLetterUpdate"
 import Subscription from "./pages/Subscription"
 import Blog from "./pages/Blog"
 import PostCreation from "./pages/PostCreation"
+import BlogDetail from "./pages/BlogDetail"
 import { useAuth } from "./context/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
 
@@ -131,6 +132,14 @@ function App() {
           element={
             <ProtectedRoute user={user}>
               <PostCreation />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/blog/:blogId"
+          element={
+            <ProtectedRoute user={user}>
+              <BlogDetail />
             </ProtectedRoute>
           }
         />
