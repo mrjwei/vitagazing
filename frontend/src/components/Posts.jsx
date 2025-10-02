@@ -52,6 +52,7 @@ const Posts = ({ posts, setPosts }) => {
               </div>
             </Link>
             <div className="mt-4 flex justify-between items-center">
+              {/* Blog Edit Navigation */}
               <Link
                 to={`/blog/${post._id}/edit?from=/blog`}
                 className="mr-2 text-violet-800 px-4 py-2 rounded flex items-center gap-2 hover:bg-violet-100 transition-all duration-300 ease-in-out"
