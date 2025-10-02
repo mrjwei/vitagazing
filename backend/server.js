@@ -1,9 +1,20 @@
 const express = require("express")
 require("dotenv").config()
 const cors = require("cors")
+const http = require("http")
+const {Server} = require("socket.io")
+const publisher = require("./publishers")
 
 const DBConnection = require("./config/db")
 const app = express()
+const server = http.createServer(app)
+const io = new Server(server, {
+  cors: {
+    origin: "*"
+  }
+})
+
+publisher(io)
 
 app.use(cors())
 app.use(express.json())
@@ -18,7 +29,7 @@ if (require.main === module) {
   DBConnection.connect()
   // If the file is run directly, start the server
   const PORT = process.env.PORT || 5001
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+  server.listen(PORT, () => console.log(`Server running on port ${PORT}`))
 }
 
 module.exports = app

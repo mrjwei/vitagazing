@@ -1,5 +1,6 @@
 const { Resume } = require("../models")
 const BaseService = require("./base")
+const emitter = require("../events")
 
 class ResumeService extends BaseService {
   async create(data) {
@@ -32,6 +33,7 @@ class ResumeService extends BaseService {
         educations,
         skills,
       })
+      emitter.emit("resumeCreated", resume)
       return resume
     } catch (error) {
       return null
