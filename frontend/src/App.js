@@ -21,6 +21,10 @@ import Blog from "./pages/Blog"
 import PostCreation from "./pages/PostCreation"
 import BlogDetail from "./pages/BlogDetail"
 import BlogEdit from "./pages/BlogUpdate"
+import JobBoardDetail from "./pages/JobBoardDetail"
+import JobBoardCreation from "./pages/JobBoardCreation"
+import JobBoards from "./pages/JobBoards"
+import JobBoardUpdate from "./pages/JobBoardUpdate"
 import { useAuth } from "./context/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
 import { NotificationProvider } from "./context/NotificationContext"
@@ -157,6 +161,38 @@ function App() {
               </ProtectedRoute>
             }
           />
+                  <Route
+          path="/job-boards/:jobBoardId"
+          element={
+            <ProtectedRoute user={user}>
+              <JobBoardDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/job-boards"
+          element={
+            <ProtectedRoute user={user}>
+              <JobBoards />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/job-boards/new"
+          element={
+            <ProtectedRoute user={user}>
+              <JobBoardCreation />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/job-boards/:jobBoardId/edit"
+          element={
+            <ProtectedRoute user={user}>
+              <JobBoardUpdate />
+            </ProtectedRoute>
+          }
+        />
         </Routes>
       </Router>
       <Notifications />
