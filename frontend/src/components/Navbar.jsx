@@ -95,7 +95,7 @@ const Navbar = () => {
                 <span>
                   <PlusIcon className="size-5" />
                 </span>
-                <span>New Post</span>
+                <span>New Post</span> {/* New Blog Post */}
               </Link>
               <Link to="/resumes" className="mr-4 text-base md:text-lg">
                 Resumes
@@ -104,7 +104,7 @@ const Navbar = () => {
                 Cover Letters
               </Link>
               <Link to="/blog" className="mr-4 text-base md:text-lg">
-                Blog
+                Blogs
               </Link>
               <button onClick={() => setIsOpen(!isOpen)}>
                 {isOpen ? (
