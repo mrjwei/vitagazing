@@ -5,9 +5,11 @@ const sinon = require("sinon")
 const ResumeController = require("../controllers/resume")
 const CoverLetterController = require("../controllers/coverLetter")
 const UserController = require("../controllers/user")
+const BlogController = require("../controllers/blog")
 const ResumeService = require("../services/resume")
 const CoverLetterService = require("../services/coverLetter")
 const UserService = require("../services/user")
+const BlogService = require("../services/blog")
 const { expect } = chai
 
 chai.use(chaiHttp)
@@ -15,6 +17,7 @@ chai.use(chaiHttp)
 const resumeController = new ResumeController()
 const coverLetterController = new CoverLetterController()
 const userController = new UserController()
+const blogController = new BlogController()
 
 // Resume
 describe("Resume creation", () => {
@@ -949,6 +952,311 @@ describe("Cover Letter deletion", () => {
     expect(stub.calledOnceWith(req.params.id)).to.be.true
     expect(coverLetter.remove.calledOnce).to.be.true
     expect(res.json.calledWith({ message: "Cover letter deleted" })).to.be.true
+
+    stub.restore()
+  })
+})
+
+// Blog
+describe("Blog creation", () => {
+  const defaultBody = {
+    title: "My first blog",
+    content: "This is a detailed blog post.",
+    tags: ["career", "tips"],
+  }
+
+  const buildReq = () => ({
+    user: { id: new mongoose.Types.ObjectId() },
+    body: { ...defaultBody },
+  })
+
+  const buildRes = () => ({
+    status: sinon.stub().returnsThis(),
+    json: sinon.spy(),
+  })
+
+  it("should create a new blog successfully", async () => {
+    const req = buildReq()
+    const res = buildRes()
+    const createdBlog = { _id: new mongoose.Types.ObjectId(), ...req.body, userId: req.user.id }
+
+    const stub = sinon.stub(BlogService.prototype, "create").resolves(createdBlog)
+
+    await blogController.create(req, res)
+
+    expect(stub.calledOnceWith({ userId: req.user.id, ...req.body })).to.be.true
+    expect(res.status.calledWith(201)).to.be.true
+    expect(res.json.calledWith(createdBlog)).to.be.true
+
+    stub.restore()
+  })
+
+  it("should not mutate the request body when creating a blog", async () => {
+    const req = buildReq()
+    const res = buildRes()
+
+    const stub = sinon.stub(BlogService.prototype, "create").resolves(null)
+
+    await blogController.create(req, res)
+
+    expect(req.body).to.deep.equal(defaultBody)
+
+    stub.restore()
+  })
+
+  it("should respond with null payload when the service returns null", async () => {
+    const req = buildReq()
+    const res = buildRes()
+
+    const stub = sinon.stub(BlogService.prototype, "create").resolves(null)
+
+    await blogController.create(req, res)
+
+    expect(res.status.calledWith(201)).to.be.true
+    expect(res.json.calledWith(null)).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 500 if blog creation throws an error", async () => {
+    const req = buildReq()
+    const res = buildRes()
+
+    const stub = sinon
+      .stub(BlogService.prototype, "create")
+      .throws(new Error("Server Error"))
+
+    await blogController.create(req, res)
+
+    expect(res.status.calledWith(500)).to.be.true
+    expect(res.json.calledWith({ message: "Server Error" })).to.be.true
+
+    stub.restore()
+  })
+})
+
+describe("Blog reading", () => {
+  it("should fetch all blogs for a user", async () => {
+    const req = { user: { id: new mongoose.Types.ObjectId() } }
+    const res = { json: sinon.spy() }
+    const blogs = [
+      {
+        _id: new mongoose.Types.ObjectId(),
+        userId: req.user.id,
+        title: "Productivity hacks",
+        content: "Useful hacks for productivity.",
+        tags: ["productivity"],
+      },
+    ]
+
+    const stub = sinon.stub(BlogService.prototype, "findAll").resolves(blogs)
+
+    await blogController.fetchAll(req, res)
+
+    expect(stub.calledOnceWith({ userId: req.user.id })).to.be.true
+    expect(res.json.calledWith(blogs)).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 500 when fetching all blogs fails", async () => {
+    const req = { user: { id: new mongoose.Types.ObjectId() } }
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() }
+
+    const stub = sinon
+      .stub(BlogService.prototype, "findAll")
+      .throws(new Error("Database error"))
+
+    await blogController.fetchAll(req, res)
+
+    expect(res.status.calledWith(500)).to.be.true
+    expect(res.json.calledWith({ message: "Database error" })).to.be.true
+
+    stub.restore()
+  })
+
+  it("should fetch a single blog by id", async () => {
+    const req = {
+      user: { id: new mongoose.Types.ObjectId() },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = { json: sinon.spy() }
+    const blog = {
+      _id: req.params.id,
+      userId: req.user.id,
+      title: "Interview preparation",
+      content: "Details about preparing for interviews.",
+      tags: ["interview"],
+    }
+
+    const stub = sinon.stub(BlogService.prototype, "findOne").resolves(blog)
+
+    await blogController.fetchOne(req, res)
+
+    expect(stub.calledOnceWith({ _id: req.params.id, userId: req.user.id })).to.be.true
+    expect(res.json.calledWith(blog)).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 404 when the requested blog is not found", async () => {
+    const req = {
+      user: { id: new mongoose.Types.ObjectId() },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() }
+
+    const stub = sinon.stub(BlogService.prototype, "findOne").resolves(null)
+
+    await blogController.fetchOne(req, res)
+
+    expect(res.status.calledWith(404)).to.be.true
+    expect(res.json.calledWith({ message: "Not found" })).to.be.true
+
+    stub.restore()
+  })
+})
+
+describe("Blog updating", () => {
+  const defaultBody = {
+    title: "Updated blog title",
+    content: "Updated content for the blog post.",
+    tags: ["update"],
+  }
+
+  const buildReq = () => ({
+    user: { id: new mongoose.Types.ObjectId() },
+    params: { id: new mongoose.Types.ObjectId() },
+    body: { ...defaultBody },
+  })
+
+  const buildRes = () => ({ status: sinon.stub().returnsThis(), json: sinon.spy() })
+
+  it("should update a blog successfully", async () => {
+    const req = buildReq()
+    const res = buildRes()
+    const updatedBlog = { _id: req.params.id, ...req.body, userId: req.user.id }
+
+    const stub = sinon.stub(BlogService.prototype, "update").resolves(updatedBlog)
+
+    await blogController.update(req, res)
+
+    expect(stub.calledOnceWith(req.params.id, { userId: req.user.id, ...req.body })).to.be.true
+    expect(res.json.calledWith(updatedBlog)).to.be.true
+
+    stub.restore()
+  })
+
+  it("should retain the original request body when updating", async () => {
+    const req = buildReq()
+    const res = buildRes()
+
+    const stub = sinon.stub(BlogService.prototype, "update").resolves(null)
+
+    await blogController.update(req, res)
+
+    expect(req.body).to.deep.equal(defaultBody)
+
+    stub.restore()
+  })
+
+  it("should return 404 if the blog to update is not found", async () => {
+    const req = buildReq()
+    const res = buildRes()
+
+    const stub = sinon.stub(BlogService.prototype, "update").resolves(null)
+
+    await blogController.update(req, res)
+
+    expect(res.status.calledWith(404)).to.be.true
+    expect(res.json.calledWith({ message: "Not found" })).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 500 if updating the blog throws an error", async () => {
+    const req = buildReq()
+    const res = buildRes()
+
+    const stub = sinon
+      .stub(BlogService.prototype, "update")
+      .throws(new Error("Update failed"))
+
+    await blogController.update(req, res)
+
+    expect(res.status.calledWith(500)).to.be.true
+    expect(res.json.calledWith({ message: "Update failed" })).to.be.true
+
+    stub.restore()
+  })
+})
+
+describe("Blog deletion", () => {
+  it("should delete a blog successfully", async () => {
+    const req = {
+      user: { id: new mongoose.Types.ObjectId() },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = { json: sinon.spy() }
+
+    const stub = sinon.stub(BlogService.prototype, "delete").resolves({ _id: req.params.id })
+
+    await blogController.delete(req, res)
+
+    expect(stub.calledOnceWith(req.params.id)).to.be.true
+    expect(res.json.calledWith({ message: "Deleted successfully" })).to.be.true
+
+    stub.restore()
+  })
+
+  it("should call delete with the correct identifier", async () => {
+    const req = {
+      user: { id: new mongoose.Types.ObjectId() },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = { json: sinon.spy() }
+
+    const stub = sinon.stub(BlogService.prototype, "delete").resolves({ _id: req.params.id })
+
+    await blogController.delete(req, res)
+
+    expect(stub.firstCall.args[0]).to.equal(req.params.id)
+
+    stub.restore()
+  })
+
+  it("should return 404 when the blog to delete is not found", async () => {
+    const req = {
+      user: { id: new mongoose.Types.ObjectId() },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() }
+
+    const stub = sinon.stub(BlogService.prototype, "delete").resolves(null)
+
+    await blogController.delete(req, res)
+
+    expect(res.status.calledWith(404)).to.be.true
+    expect(res.json.calledWith({ message: "Not found" })).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 500 if deleting the blog throws an error", async () => {
+    const req = {
+      user: { id: new mongoose.Types.ObjectId() },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() }
+
+    const stub = sinon
+      .stub(BlogService.prototype, "delete")
+      .throws(new Error("Deletion failed"))
+
+    await blogController.delete(req, res)
+
+    expect(res.status.calledWith(500)).to.be.true
+    expect(res.json.calledWith({ message: "Deletion failed" })).to.be.true
 
     stub.restore()
   })
