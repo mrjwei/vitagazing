@@ -20,6 +20,7 @@ import Subscription from "./pages/Subscription"
 import Blog from "./pages/Blog"
 import PostCreation from "./pages/PostCreation"
 import BlogDetail from "./pages/BlogDetail"
+import BlogEdit from "./pages/BlogUpdate"
 import { useAuth } from "./context/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
 
@@ -140,6 +141,14 @@ function App() {
           element={
             <ProtectedRoute user={user}>
               <BlogDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/blog/:blogId/edit"
+          element={
+            <ProtectedRoute user={user}>
+              <BlogEdit />
             </ProtectedRoute>
           }
         />
