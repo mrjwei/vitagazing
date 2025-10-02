@@ -1,12 +1,11 @@
-const BaseService = require("../services/base")
-
 class Controller {
-  constructor() {
-    this.service = new BaseService()
+  constructor(service) {
+    this.service = service
   }
   async create(req, res) {
     try {
-      const instance = await this.service.create(req.body)
+      const data = this.constructData(req)
+      const instance = await this.service.create(data)
       res.status(201).json(instance)
     } catch (error) {
       res.status(500).json({ message: error.message })
@@ -14,7 +13,8 @@ class Controller {
   }
   async fetchOne(req, res) {
     try {
-      const instance = await this.service.findOne({ _id: req.params.id })
+      const query = this.constructQueryForOne(req)
+      const instance = await this.service.findOne(query)
       if (!instance) {
         return res.status(404).json({ message: "Not found" })
       }
@@ -25,15 +25,18 @@ class Controller {
   }
   async fetchAll(req, res) {
     try {
-      const instances = await this.service.findAll()
+      const query = this.constructQueryForAll(req)
+      const instances = await this.service.findAll(query)
       res.json(instances)
     } catch (error) {
-      res.status(500).json({ message: error.message })
+      res.status(500).json({ message: error.message})
     }
   }
   async update(req, res) {
     try {
-      const instance = await this.service.update(req.params.id, req.body)
+      const query = this.constructQueryForOne(req)
+      const data = this.constructData(req)
+      const instance = await this.service.update(query._id, data)
       if (!instance) {
         return res.status(404).json({ message: "Not found" })
       }
@@ -44,7 +47,8 @@ class Controller {
   }
   async delete(req, res) {
     try {
-      const instance = await this.service.delete(req.params.id)
+      const query = this.constructQueryForOne(req)
+      const instance = await this.service.delete(query._id)
       if (!instance) {
         return res.status(404).json({ message: "Not found" })
       }
@@ -52,6 +56,15 @@ class Controller {
     } catch (error) {
       res.status(500).json({ message: error.message })
     }
+  }
+  constructData(req) {
+    return req.body
+  }
+  constructQueryForOne(req) {
+    return { _id: req.params.id }
+  }
+  constructQueryForAll(req) {
+    return {}
   }
 }
 

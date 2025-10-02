@@ -1,28 +1,35 @@
+const express = require("express")
+require("dotenv").config()
+const cors = require("cors")
+const http = require("http")
+const {Server} = require("socket.io")
+const publisher = require("./publishers")
 
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const connectDB = require('./config/db');
+const DBConnection = require("./config/db")
+const app = express()
+const server = http.createServer(app)
+const io = new Server(server, {
+  cors: {
+    origin: "*"
+  }
+})
 
-dotenv.config();
+publisher(io)
 
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/resumes', require('./routes/resumeRoutes'));
-app.use('/api/cover-letters', require('./routes/coverLetterRoutes'));
-app.use('/api/subscribe', require('./routes/subscriptionRoutes'));
+app.use(cors())
+app.use(express.json())
+app.use("/api/auth", require("./routes/authRoutes"))
+app.use("/api/resumes", require("./routes/resumeRoutes"))
+app.use("/api/cover-letters", require("./routes/coverLetterRoutes"))
+app.use("/api/subscribe", require("./routes/subscriptionRoutes"))
+app.use("/api/blog", require("./routes/blogRoutes"))
 
 // Export the app object for testing
 if (require.main === module) {
-    connectDB();
-    // If the file is run directly, start the server
-    const PORT = process.env.PORT || 5001;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  }
-
+  DBConnection.connect()
+  // If the file is run directly, start the server
+  const PORT = process.env.PORT || 5001
+  server.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+}
 
 module.exports = app

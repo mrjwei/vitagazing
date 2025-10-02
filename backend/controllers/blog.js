@@ -1,9 +1,9 @@
-const CoverLetterService = require("../services/coverLetter")
+const BlogService = require("../services/blog")
 const BaseController = require("./base")
 
-class CoverLetterController extends BaseController {
+class BlogController extends BaseController {
   constructor() {
-    super(new CoverLetterService())
+    super(new BlogService())
   }
 
   constructData(req) {
@@ -22,4 +22,4 @@ class CoverLetterController extends BaseController {
   }
 }
 
-module.exports = CoverLetterController
+module.exports = BlogController

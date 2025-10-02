@@ -17,107 +17,150 @@ import CoverLetterCreation from "./pages/CoverLetterCreation"
 import ResumeUpdate from "./pages/ResumeUpdate"
 import CoverLetterUpdate from "./pages/CoverLetterUpdate"
 import Subscription from "./pages/Subscription"
+import Blog from "./pages/Blog"
+import PostCreation from "./pages/PostCreation"
+import BlogDetail from "./pages/BlogDetail"
+import BlogEdit from "./pages/BlogUpdate"
 import { useAuth } from "./context/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
+import { NotificationProvider } from "./context/NotificationContext"
+import { Notifications } from "./components/Notifications"
+import { GlobalNotifier } from "./components/Notifier"
 
 function App() {
   const { user } = useAuth()
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute user={user}>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/resumes/new"
-          element={
-            <ProtectedRoute user={user}>
-              <ResumeCreation />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/resumes"
-          element={
-            <ProtectedRoute user={user}>
-              <Resumes />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/" element={<Navigate to="/resumes" replace />} />
-        <Route
-          path="/resumes/:resumeId/edit"
-          element={
-            <ProtectedRoute user={user}>
-              <ResumeUpdate />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/resumes/:resumeId"
-          element={
-            <ProtectedRoute user={user}>
-              <ResumeDetail />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/resumes/:resumeId/templates"
-          element={
-            <ProtectedRoute user={user}>
-              <Templates />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/cover-letters/new"
-          element={
-            <ProtectedRoute user={user}>
-              <CoverLetterCreation />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/cover-letters"
-          element={
-            <ProtectedRoute user={user}>
-              <CoverLetters />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/cover-letters/:coverLetterId/edit"
-          element={
-            <ProtectedRoute user={user}>
-              <CoverLetterUpdate />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/cover-letters/:coverLetterId"
-          element={
-            <ProtectedRoute user={user}>
-              <CoverLetterDetail />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/subscribe"
-          element={
-            <ProtectedRoute user={user}>
-              <Subscription />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </Router>
+    <NotificationProvider>
+      <GlobalNotifier />
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute user={user}>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resumes/new"
+            element={
+              <ProtectedRoute user={user}>
+                <ResumeCreation />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resumes"
+            element={
+              <ProtectedRoute user={user}>
+                <Resumes />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/" element={<Navigate to="/resumes" replace />} />
+          <Route
+            path="/resumes/:resumeId/edit"
+            element={
+              <ProtectedRoute user={user}>
+                <ResumeUpdate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resumes/:resumeId"
+            element={
+              <ProtectedRoute user={user}>
+                <ResumeDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/resumes/:resumeId/templates"
+            element={
+              <ProtectedRoute user={user}>
+                <Templates />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cover-letters/new"
+            element={
+              <ProtectedRoute user={user}>
+                <CoverLetterCreation />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cover-letters"
+            element={
+              <ProtectedRoute user={user}>
+                <CoverLetters />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cover-letters/:coverLetterId/edit"
+            element={
+              <ProtectedRoute user={user}>
+                <CoverLetterUpdate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cover-letters/:coverLetterId"
+            element={
+              <ProtectedRoute user={user}>
+                <CoverLetterDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/subscribe"
+            element={
+              <ProtectedRoute user={user}>
+                <Subscription />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/blog"
+            element={
+              <ProtectedRoute user={user}>
+                <Blog />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/blog/new"
+            element={
+              <ProtectedRoute user={user}>
+                <PostCreation />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/blog/:blogId"
+            element={
+              <ProtectedRoute user={user}>
+                <BlogDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/blog/:blogId/edit"
+            element={
+              <ProtectedRoute user={user}>
+                <BlogEdit />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+      <Notifications />
+    </NotificationProvider>
   )
 }
 

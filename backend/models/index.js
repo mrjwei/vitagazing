@@ -89,6 +89,21 @@ const CoverLetter = modelFactory(
   { timestamps: true }
 )
 
+const Blog = modelFactory(
+  "Blog",
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    title: { type: String, required: true },
+    content: { type: String, required: true },
+    tags: { type: [String], default: [] },
+  },
+  { timestamps: true }
+)
+
 // const Template = modelFactory(
 //   "Template",
 //   {
@@ -123,4 +138,5 @@ module.exports = {
   WorkExperience,
   Education,
   Skill,
+  Blog
 }
