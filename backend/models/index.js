@@ -55,7 +55,7 @@ const Resume = modelFactory(
       ref: "User",
       required: true,
     },
-    templateId: {type: String, default: "default"},
+    templateId: { type: String, default: "default" },
     firstname: { type: String },
     lastname: { type: String },
     title: { type: String },
@@ -104,6 +104,22 @@ const Blog = modelFactory(
   { timestamps: true }
 )
 
+const JobBoard = modelFactory(
+  "JobBoard",
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    jobTitle: { type: String },
+    description: { type: String },
+    deadline: { type: String },
+    location: { type: String },
+  },
+  { timestamps: true }
+)
+
 // const Template = modelFactory(
 //   "Template",
 //   {
@@ -129,6 +145,7 @@ const Blog = modelFactory(
 //   },
 //   { timestamps: true }
 // )
+//
 
 module.exports = {
   User,
@@ -138,5 +155,6 @@ module.exports = {
   WorkExperience,
   Education,
   Skill,
-  Blog
+  Blog,
+  JobBoard,
 }
