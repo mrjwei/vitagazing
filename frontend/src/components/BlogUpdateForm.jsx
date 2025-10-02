@@ -40,6 +40,7 @@ const BlogUpdateForm = ({ blog }) => {
   }
 
   return (
+    // styling consistent with other update forms
     <form
       onSubmit={handleSubmit}
       className="bg-white p-6 md:p-8 shadow-md rounded-lg"
