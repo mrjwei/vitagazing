@@ -11,7 +11,6 @@ const ResumeService = require("../services/resume")
 const CoverLetterService = require("../services/coverLetter")
 const UserService = require("../services/user")
 const BlogService = require("../services/blog")
-const JobBoardController = require("../controllers/jobBoard")
 const JobBoardService = require("../services/jobBoard")
 const { expect } = chai
 
