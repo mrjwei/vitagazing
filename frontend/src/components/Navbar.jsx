@@ -67,6 +67,14 @@ const Navbar = () => {
                         New Post
                       </Link>
                     </li>
+                    <li>
+                      <Link
+                        to="/job-boards/new"
+                        className="block px-4 py-2 hover:bg-gray-100 rounded-md text-nowrap"
+                      >
+                        New Job Board
+                      </Link>
+                    </li>
                   </ul>
                 )}
               </div>
@@ -97,6 +105,15 @@ const Navbar = () => {
                 </span>
                 <span>New Post</span> {/* New Blog Post */}
               </Link>
+              <Link
+                to="/job-boards/new"
+                className="hidden md:flex mr-4 items-center gap-1 bg-violet-800 text-white px-3 p-2 rounded-lg"
+              >
+                <span>
+                  <PlusIcon className="size-5" />
+                </span>
+                <span>New Job Board</span>
+              </Link>
               <Link to="/resumes" className="mr-4 text-base md:text-lg">
                 Resumes
               </Link>
@@ -105,6 +122,9 @@ const Navbar = () => {
               </Link>
               <Link to="/blog" className="mr-4 text-base md:text-lg">
                 Blogs
+              </Link>
+              <Link to="/job-boards" className="mr-4 text-base md:text-lg">
+                My Job Boards
               </Link>
               <button onClick={() => setIsOpen(!isOpen)}>
                 {isOpen ? (
