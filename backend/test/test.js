@@ -11,6 +11,7 @@ const ResumeService = require("../services/resume")
 const CoverLetterService = require("../services/coverLetter")
 const UserService = require("../services/user")
 const BlogService = require("../services/blog")
+const JobBoardController = require("../controllers/jobBoard")
 const JobBoardService = require("../services/jobBoard")
 const { expect } = chai
 
@@ -1207,6 +1208,183 @@ describe("Subscribe", () => {
     stub.restore()
   })
 })
+
+// Job Board
+describe("Job board creation", () => {
+  const defaultBody = {
+    jobTitle: "Frontend Developer",
+    description: "Build engaging user interfaces.",
+    deadline: "2024-12-31",
+    location: "Remote",
+  }
+
+  const buildReq = () => ({
+    user: { id: new mongoose.Types.ObjectId() },
+    body: { ...defaultBody },
+  })
+
+  const buildRes = () => ({
+    status: sinon.stub().returnsThis(),
+    json: sinon.spy(),
+  })
+
+  it("should create a new job board entry successfully", async () => {
+    const req = buildReq()
+    const res = buildRes()
+    const createdJobBoard = {
+      _id: new mongoose.Types.ObjectId(),
+      ...req.body,
+      userId: req.user.id,
+    }
+
+    const stub = sinon
+      .stub(JobBoardService.prototype, "create")
+      .resolves(createdJobBoard)
+
+    await jobBoardController.create(req, res)
+
+    expect(stub.calledOnceWith({ userId: req.user.id, ...req.body })).to.be.true
+    expect(res.status.calledWith(201)).to.be.true
+    expect(res.json.calledWith(createdJobBoard)).to.be.true
+
+    stub.restore()
+  })
+
+  it("should not mutate the request body when creating a job board entry", async () => {
+    const req = buildReq()
+    const res = buildRes()
+
+    const stub = sinon.stub(JobBoardService.prototype, "create").resolves(null)
+
+    await jobBoardController.create(req, res)
+
+    expect(req.body).to.deep.equal(defaultBody)
+
+    stub.restore()
+  })
+
+  it("should respond with null payload when the service returns null", async () => {
+    const req = buildReq()
+    const res = buildRes()
+
+    const stub = sinon.stub(JobBoardService.prototype, "create").resolves(null)
+
+    await jobBoardController.create(req, res)
+
+    expect(res.status.calledWith(201)).to.be.true
+    expect(res.json.calledWith(null)).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 500 if job board creation throws an error", async () => {
+    const req = buildReq()
+    const res = buildRes()
+
+    const stub = sinon
+      .stub(JobBoardService.prototype, "create")
+      .throws(new Error("Server Error"))
+
+    await jobBoardController.create(req, res)
+
+    expect(res.status.calledWith(500)).to.be.true
+    expect(res.json.calledWith({ message: "Server Error" })).to.be.true
+
+    stub.restore()
+  })
+})
+
+describe("Job board reading", () => {
+  it("should fetch all job boards for a user", async () => {
+    const req = { user: { id: new mongoose.Types.ObjectId() } }
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() }
+    const jobBoards = [
+      {
+        _id: new mongoose.Types.ObjectId(),
+        userId: req.user.id,
+        jobTitle: "Product Manager",
+        description: "Lead product initiatives.",
+        deadline: "2024-11-30",
+        location: "Hybrid",
+      },
+    ]
+
+    const stub = sinon
+      .stub(JobBoardService.prototype, "findAll")
+      .resolves(jobBoards)
+
+    await jobBoardController.fetchAll(req, res)
+
+    expect(stub.calledOnceWith({ userId: req.user.id })).to.be.true
+    expect(res.status.calledWith(200)).to.be.true
+    expect(res.json.calledWith(jobBoards)).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 500 when fetching all job boards fails", async () => {
+    const req = { user: { id: new mongoose.Types.ObjectId() } }
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() }
+
+    const stub = sinon
+      .stub(JobBoardService.prototype, "findAll")
+      .throws(new Error("Database error"))
+
+    await jobBoardController.fetchAll(req, res)
+
+    expect(res.status.calledWith(500)).to.be.true
+    expect(res.json.calledWith({ message: "Database error" })).to.be.true
+
+    stub.restore()
+  })
+
+  it("should fetch a single job board for a user", async () => {
+    const req = {
+      user: { id: new mongoose.Types.ObjectId() },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = { json: sinon.spy(), status: sinon.stub().returnsThis() }
+    const jobBoard = {
+      _id: req.params.id,
+      userId: req.user.id,
+      jobTitle: "Data Analyst",
+      description: "Analyze business data.",
+      deadline: "2024-10-15",
+      location: "Onsite",
+    }
+
+    const stub = sinon
+      .stub(JobBoardService.prototype, "findOne")
+      .resolves(jobBoard)
+
+    await jobBoardController.fetchOne(req, res)
+
+    expect(
+      stub.calledOnceWith({ _id: req.params.id, userId: req.user.id })
+    ).to.be.true
+    expect(res.json.calledWith(jobBoard)).to.be.true
+
+    stub.restore()
+  })
+
+  it("should return 404 when the job board is not found", async () => {
+    const req = {
+      user: { id: new mongoose.Types.ObjectId() },
+      params: { id: new mongoose.Types.ObjectId() },
+    }
+    const res = { status: sinon.stub().returnsThis(), json: sinon.spy() }
+
+    const stub = sinon.stub(JobBoardService.prototype, "findOne").resolves(null)
+
+    await jobBoardController.fetchOne(req, res)
+
+    expect(res.status.calledWith(404)).to.be.true
+    expect(res.json.calledWith({ message: "Job board not found" })).to.be.true
+
+    stub.restore()
+  })
+})
+
 
 // Job Board
 describe("Job board creation", () => {
