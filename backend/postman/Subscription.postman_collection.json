@@ -1,0 +1,80 @@
+{
+	"info": {
+		"_postman_id": "dc988c37-1380-4285-accb-e377fa6ebbf8",
+		"name": "Subscription",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48240918",
+		"_collection_link": "https://n12334758-3608901.postman.co/workspace/Vitagazing~8a75a421-af2e-4e38-9967-f7a485a2e4db/collection/48240918-dc988c37-1380-4285-accb-e377fa6ebbf8?action=share&source=collection_link&creator=48240918"
+	},
+	"item": [
+		{
+			"name": "Fetch Subscription",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"",
+							"pm.test(\"Status is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 300ms\", function",
+							"() {",
+							"pm.expect(pm.response.responseTime).to.be.below(300);",
+							"});",
+							"",
+							"pm.test(\"User is marked as subscribed\", function () {",
+							"    pm.expect(response.subscribed).to.equal(true);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"subscribed\": true\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/subscribe",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"subscribe"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

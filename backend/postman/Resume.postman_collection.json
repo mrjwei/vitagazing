@@ -1,0 +1,244 @@
+{
+	"info": {
+		"_postman_id": "69cf142d-d720-4597-850e-8fb89e19021b",
+		"name": "Resume",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48240918",
+		"_collection_link": "https://n12334758-3608901.postman.co/workspace/Vitagazing~8a75a421-af2e-4e38-9967-f7a485a2e4db/collection/48240918-69cf142d-d720-4597-850e-8fb89e19021b?action=share&source=collection_link&creator=48240918"
+	},
+	"item": [
+		{
+			"name": "Fetch Resume",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function",
+							"() {",
+							"pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/api/resumes",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"resumes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Resume",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 300ms\", function\r",
+							"() {\r",
+							"pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"const response = pm.response.json();\r",
+							"\r",
+							"if (response._id) {\r",
+							"        pm.environment.set(\"resumes_id\", response._id);\r",
+							"        console.log(\"Resume created and ID saved:\", response._id);\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstname\": \"John\",\r\n  \"lastname\": \"Doe\",\r\n  \"email\": \"email@email.com\",\r\n  \"phone\": \"hfjosa\",\r\n  \"summary\": \"fsa\",\r\n  \"workExperiences\": [\r\n    {\r\n      \"id\": \"3166e7a4-0a8d-4739-83a2-e6820e402535\",\r\n      \"companyName\": \"fas\",\r\n      \"startDate\": \"2025-09-27\",\r\n      \"endDate\": \"2025-09-27\",\r\n      \"responsibility\": \"fafsa\"\r\n    }\r\n  ],\r\n  \"educations\": [\r\n    {\r\n      \"id\": \"67b0061a-ee08-4928-aaaf-018bf333f151\",\r\n      \"degree\": \"asfas\",\r\n      \"institution\": \"asfas\",\r\n      \"startDate\": \"2025-09-28\",\r\n      \"endDate\": \"2025-09-28\"\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/resumes",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"resumes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Resume",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 300ms\", function\r",
+							"() {\r",
+							"pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Resume was successfully updated.\", function () {\r",
+							"    pm.expect(response.firstname).to.equal(\"Updated\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstname\": \"Updated\",\r\n  \"lastname\": \"Doe\",\r\n  \"email\": \"john.updated@email.com\",\r\n  \"phone\": \"5551234567\",\r\n  \"summary\": \"Updated professional summary.\",\r\n  \"workExperiences\": [\r\n    {\r\n      \"id\": \"3166e7a4-0a8d-4739-83a2-e6820e402535\",\r\n      \"companyName\": \"New Company Name\",\r\n      \"startDate\": \"2025-01-01\",\r\n      \"endDate\": \"2025-09-27\",\r\n      \"responsibility\": \"Led new initiatives.\"\r\n    }\r\n  ],\r\n  \"educations\": [\r\n    {\r\n      \"id\": \"67b0061a-ee08-4928-aaaf-018bf333f151\",\r\n      \"degree\": \"Master of IT\",\r\n      \"institution\": \"Updated University\",\r\n      \"startDate\": \"2024-09-01\",\r\n      \"endDate\": \"2025-06-30\"\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/resumes/{{resumes_id}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"resumes",
+						"{{resumes_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Resume",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 300ms\", function\r",
+							"() {\r",
+							"pm.expect(pm.response.responseTime).to.be.below(300);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Resume deleted successfully\", function () {\r",
+							"    pm.expect(response.message).to.equal(\"Resume deleted successfully\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/api/resumes/{{resumes_id}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"resumes",
+						"{{resumes_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

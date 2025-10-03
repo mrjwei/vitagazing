@@ -1,0 +1,246 @@
+{
+	"info": {
+		"_postman_id": "4df90705-e1bf-4154-b392-880646f9eb2f",
+		"name": "Job Board",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48240918",
+		"_collection_link": "https://n12334758-3608901.postman.co/workspace/Vitagazing~8a75a421-af2e-4e38-9967-f7a485a2e4db/collection/48240918-4df90705-e1bf-4154-b392-880646f9eb2f?action=share&source=collection_link&creator=48240918"
+	},
+	"item": [
+		{
+			"name": "Fetch Job Board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function\r",
+							"() {\r",
+							"pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/api/job-boards",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"job-boards"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Job Board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.expect(pm.response.code).to.equal(201);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 300ms\", function",
+							"() {",
+							"pm.expect(pm.response.responseTime).to.be.below(300);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"",
+							"if (response._id) {",
+							"        pm.environment.set(\"job-board_id\", response._id);",
+							"        console.log(\"Job Board created and ID saved:\", response._id);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userId\": \"68d8dbbcd23d5a0a8550fbb7\",\n  \"jobTitle\": \"fsafa\",\n  \"description\": \"fsafas\",\n  \"deadline\": \"2025-10-04\",\n  \"location\": \"sagasa\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/job-boards",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"job-boards"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Job Board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 300ms\", function",
+							"() {",
+							"pm.expect(pm.response.responseTime).to.be.below(300);",
+							"});",
+							"",
+							"pm.test(\"Description was updated\", function () {",
+							"    pm.expect(response.description).to.equal(\"Description updated\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userId\": \"68d8dbbcd23d5a0a8550fbb7\",\n  \"jobTitle\": \"updated job title\",\n  \"description\": \"Description updated\",\n  \"deadline\": \"2025-10-04\",\n  \"location\": \"sagasa\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/job-boards/{{job-board_id}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"job-boards",
+						"{{job-board_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Job Board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 300ms\", function",
+							"() {",
+							"pm.expect(pm.response.responseTime).to.be.below(300);",
+							"});",
+							"",
+							"pm.test(\"Job Board deleted successfully\", function () {",
+							"    pm.expect(response.message).to.equal(\"Job board deleted successfully\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/api/job-boards/{{job-board_id}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"job-boards",
+						"{{job-board_id}}"
+					],
+					"query": [
+						{
+							"key": null,
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,236 @@
+{
+	"info": {
+		"_postman_id": "3e9c3bcf-f65a-4118-9749-f66ebfa0dd34",
+		"name": "Authentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48240918",
+		"_collection_link": "https://n12334758-3608901.postman.co/workspace/Vitagazing~8a75a421-af2e-4e38-9967-f7a485a2e4db/collection/48240918-3e9c3bcf-f65a-4118-9749-f66ebfa0dd34?action=share&source=collection_link&creator=48240918"
+	},
+	"item": [
+		{
+			"name": "Registration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 201 (Created)\", function () {\r",
+							"pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"// Save JWT if returned\r",
+							"if (response.token) {\r",
+							"pm.environment.set(\"jwt_token\", response.token);\r",
+							"console.log(\"JWT Token saved from registration response\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"username\": \"testing\",\r\n\"email\": \"email@mail.com\",\r\n\"password\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/auth/register",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function\r",
+							"() {\r",
+							"pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"if (response.token) {\r",
+							"pm.environment.set(\"jwt_token\", response.token);\r",
+							"console.log(\"JWT Token saved to environment\");\r",
+							"} else {\r",
+							"console.warn(\"No token found in response!\");\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"email\": \"foo@mail.com\",\r\n\"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/auth/login",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.test(\"Status code is 200\", function () {",
+							"pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function",
+							"() {",
+							"pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/api/auth/profile",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.test(\"Status code is 200\", function () {",
+							"pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 300ms\", function",
+							"() {",
+							"pm.expect(pm.response.responseTime).to.be.below(300);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/api/auth/profile",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
