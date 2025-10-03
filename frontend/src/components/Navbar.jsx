@@ -15,7 +15,7 @@ const links = [
   { to: "/resumes", label: "Resumes" },
   { to: "/cover-letters", label: "Cover Letters" },
   { to: "/blog", label: "Blog" },
-  { to: "/job-boards", label: "Job Boards" },
+  { to: "/job-boards", label: "Job Board" },
 ]
 
 const Navbar = () => {
