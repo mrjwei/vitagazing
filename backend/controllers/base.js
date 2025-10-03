@@ -52,7 +52,7 @@ class Controller {
       if (!instance) {
         return res.status(404).json({ message: "Not found" })
       }
-      res.json({ message: "Deleted successfully" })
+      res.status(200).json({ message: "Deleted successfully" })
     } catch (error) {
       res.status(500).json({ message: error.message })
     }
