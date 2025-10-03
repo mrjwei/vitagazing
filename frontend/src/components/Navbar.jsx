@@ -81,7 +81,7 @@ const Navbar = () => {
         </div>
         <div>
           {user ? (
-            <div className="flex items-center">
+            <div className="flex items-center relative">
               <div className="flex items-center mr-4">
                 <button onClick={() => setIsNewMenuOpen(!isNewMenuOpen)}>
                   {isNewMenuOpen ? (
@@ -97,7 +97,7 @@ const Navbar = () => {
                   )}
                 </button>
                 {isNewMenuOpen && (
-                  <ul className="absolute top-full translate-y-1 right-0 bg-white p-2 shadow-md border rounded-lg z-10">
+                  <ul className="absolute top-full translate-y-5 right-0 bg-white p-2 shadow-md border rounded-lg z-10">
                     <li>
                       <Link
                         to="/resumes/new"
@@ -141,7 +141,7 @@ const Navbar = () => {
                 )}
               </button>
               {isOpen && (
-                <ul className="absolute top-full translate-y-1 right-0 bg-white p-2 shadow-md border rounded-lg z-10">
+                <ul className="absolute top-full translate-y-5 right-0 bg-white p-2 shadow-md border rounded-lg z-10">
                   <li>
                     <Link
                       to="/profile"
