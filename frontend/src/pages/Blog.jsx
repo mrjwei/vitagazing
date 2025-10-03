@@ -3,6 +3,7 @@ import axiosInstance from '../axiosConfig';
 import Posts from '../components/Posts';
 import { useAuth } from '../context/AuthContext';
 import Navbar from "../components/Navbar"
+import { Placeholder } from "../components/Placeholder"
 
 const Blog = () => {
   const { user } = useAuth();
@@ -29,7 +30,11 @@ const Blog = () => {
       <Navbar/>
       <div className="container mx-auto px-8 py-[88px] !max-w-[1280px]">
         <h1 className="text-3xl font-bold mt-2 mb-8">My Posts</h1>
-        <Posts posts={posts} setPosts={setPosts} />
+        {posts.length === 0 ? (
+          <Placeholder label="posts" to="/blog/new" />
+        ) : (
+          <Posts posts={posts} setPosts={setPosts} />
+        )}
       </div>
     </>
   );

@@ -3,6 +3,7 @@ import axiosInstance from '../axiosConfig';
 import CoverLetterList from '../components/CoverLetterList';
 import { useAuth } from '../context/AuthContext';
 import Navbar from "../components/Navbar"
+import { Placeholder } from "../components/Placeholder"
 
 const CoverLetters = () => {
   const { user } = useAuth();
@@ -29,7 +30,11 @@ const CoverLetters = () => {
       <Navbar/>
       <div className="container mx-auto px-8 py-[88px] !max-w-[1280px]">
         <h1 className="text-3xl font-bold mt-2 mb-8">My Cover Letters</h1>
-        <CoverLetterList coverLetters={coverLetters} setCoverLetters={setCoverLetters} />
+        {coverLetters.length === 0 ? (
+          <Placeholder label="cover letters" to="/cover-letters/new" />
+        ) : (
+          <CoverLetterList coverLetters={coverLetters} setCoverLetters={setCoverLetters} />
+        )}
       </div>
     </>
   );
