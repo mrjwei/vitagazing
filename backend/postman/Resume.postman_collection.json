@@ -25,7 +25,11 @@
 							"pm.test(\"Response time is less than 200ms\", function",
 							"() {",
 							"pm.expect(pm.response.responseTime).to.be.below(200);",
-							"});"
+							"});",
+							"",
+							"",
+							"",
+							""
 						],
 						"type": "text/javascript",
 						"packages": {},
@@ -208,7 +212,7 @@
 							"});\r",
 							"\r",
 							"pm.test(\"Resume deleted successfully\", function () {\r",
-							"    pm.expect(response.message).to.equal(\"Resume deleted successfully\");\r",
+							"    pm.expect(response.message).to.equal(\"Deleted successfully\");\r",
 							"});"
 						],
 						"type": "text/javascript",
