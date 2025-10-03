@@ -80,7 +80,7 @@ class JobBoardController {
                 return res.status(404).json({ message: "Job board not found" })
             }
             await jobBoard.remove()
-            res.json({ message: "Job board deleted" })
+            res.json({ message: "Job board deleted successfully" })
         } catch (error) {
             res.status(500).json({ message: error.message })
         }
