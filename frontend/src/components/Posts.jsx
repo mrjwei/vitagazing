@@ -1,12 +1,7 @@
-import { useRef } from "react"
-import { v4 as uuidv4 } from "uuid"
 import { Link } from "react-router-dom"
-import html2canvas from "html2canvas"
-import jsPDF from "jspdf"
 import {
   PencilIcon,
   TrashIcon,
-  ArrowDownTrayIcon,
 } from "@heroicons/react/24/outline"
 import { useAuth } from "../context/AuthContext"
 import axiosInstance from "../axiosConfig"
