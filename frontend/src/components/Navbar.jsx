@@ -3,15 +3,27 @@ import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import {
   UserCircleIcon as UserCircleOutlineIcon,
-  PlusIcon, ChevronUpIcon, ChevronDownIcon
+  PlusIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+  Bars2Icon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline"
 import { UserCircleIcon as UserCircleSolidIcon } from "@heroicons/react/24/solid"
+
+const links = [
+  { to: "/resumes", label: "Resumes" },
+  { to: "/cover-letters", label: "Cover Letters" },
+  { to: "/blog", label: "Blog" },
+  { to: "/job-boards", label: "Job Boards" },
+]
 
 const Navbar = () => {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
   const [isNewMenuOpen, setIsNewMenuOpen] = useState(false)
+  const [isNavMenuOpen, setIsNavMenuOpen] = useState(false)
 
   const handleLogout = () => {
     logout()
@@ -19,30 +31,73 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="text-gray-800 bg-gray-100 fixed w-full z-20">
+    <nav className="text-gray-800 bg-white fixed w-full z-20 border-b-2 py-2">
       <div className="container !max-w-[1280px] mx-auto flex justify-between items-center px-4 py-2 lg:px-8">
-        <Link to="/" className="text-2xl font-bold">
-          <img src="/logo.svg" width={160} alt="" className="hidden md:block" />
-          <img
-            src={`/logo-sp.svg`}
-            width={48}
-            alt=""
-            className="block md:hidden"
-          />
-        </Link>
+        <div className="flex items-center">
+          <button type="button" className="mr-4" onClick={() => setIsNavMenuOpen(!isNavMenuOpen)}>
+            {isNavMenuOpen ? (
+              <XMarkIcon className="size-8 md:hidden" />
+            ) : (
+              <Bars2Icon className="size-8 md:hidden" />
+            )}
+          </button>
+          {isNavMenuOpen && (
+            <ul className="absolute top-full translate-y-1 left-0 bg-white p-2 shadow-md border rounded-lg z-10">
+              {links.map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="block px-4 py-2 hover:bg-gray-100 rounded-md"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+          <Link to="/" className="text-2xl font-bold mr-8">
+            <img
+              src="/logo.svg"
+              width={160}
+              alt=""
+              className="hidden md:block"
+            />
+            <img
+              src={`/logo-sp.svg`}
+              width={48}
+              alt=""
+              className="block md:hidden"
+            />
+          </Link>
+          <ul className="gap-4 hidden md:flex">
+            {links.map((link) => (
+              <li key={link.to}>
+                <Link to={link.to} className="hover:underline">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
         <div>
           {user ? (
-            <div className="flex items-center relative">
-              <div className="md:hidden relative flex items-center mr-4">
+            <div className="flex items-center">
+              <div className="flex items-center mr-4">
                 <button onClick={() => setIsNewMenuOpen(!isNewMenuOpen)}>
                   {isNewMenuOpen ? (
-                    <span className="flex items-center gap-1"><PlusIcon className="size-8" /><ChevronUpIcon className="size-4" /></span>
+                    <span className="flex items-center gap-1">
+                      <PlusIcon className="size-8" />
+                      <ChevronUpIcon className="size-4" />
+                    </span>
                   ) : (
-                    <span className="flex items-center gap-1"><PlusIcon className="size-8" /><ChevronDownIcon className="size-4" /></span>
+                    <span className="flex items-center gap-1">
+                      <PlusIcon className="size-8" />
+                      <ChevronDownIcon className="size-4" />
+                    </span>
                   )}
                 </button>
                 {isNewMenuOpen && (
-                  <ul className="absolute top-full right-0 bg-white p-2 shadow-md border rounded-lg z-10">
+                  <ul className="absolute top-full translate-y-1 right-0 bg-white p-2 shadow-md border rounded-lg z-10">
                     <li>
                       <Link
                         to="/resumes/new"
@@ -78,54 +133,6 @@ const Navbar = () => {
                   </ul>
                 )}
               </div>
-              <Link
-                to="/resumes/new"
-                className="hidden md:flex mr-4 items-center gap-1 bg-violet-800 text-white px-3 p-2 rounded-lg"
-              >
-                <span>
-                  <PlusIcon className="size-5" />
-                </span>
-                <span>New Resume</span>
-              </Link>
-              <Link
-                to="/cover-letters/new"
-                className="hidden md:flex mr-4 items-center gap-1 bg-violet-800 text-white px-3 p-2 rounded-lg"
-              >
-                <span>
-                  <PlusIcon className="size-5" />
-                </span>
-                <span>New Cover Letter</span>
-              </Link>
-              <Link
-                to="/blog/new"
-                className="hidden md:flex mr-4 items-center gap-1 bg-violet-800 text-white px-3 p-2 rounded-lg"
-              >
-                <span>
-                  <PlusIcon className="size-5" />
-                </span>
-                <span>New Post</span> {/* New Blog Post */}
-              </Link>
-              <Link
-                to="/job-boards/new"
-                className="hidden md:flex mr-4 items-center gap-1 bg-violet-800 text-white px-3 p-2 rounded-lg"
-              >
-                <span>
-                  <PlusIcon className="size-5" />
-                </span>
-                <span>New Job Board</span>
-              </Link>
-              <Link to="/resumes" className="mr-4 text-base md:text-lg">
-                Resumes
-              </Link>
-              <Link to="/cover-letters" className="mr-4 text-base md:text-lg">
-                Cover Letters
-              </Link>
-              <Link to="/blog" className="mr-4 text-base md:text-lg">
-                Blogs
-              </Link>
-              <Link to="/job-boards" className="mr-4 text-base md:text-lg">
-                My Job Boards
-              </Link>
               <button onClick={() => setIsOpen(!isOpen)}>
                 {isOpen ? (
                   <UserCircleSolidIcon className="size-8" />
@@ -134,7 +141,7 @@ const Navbar = () => {
                 )}
               </button>
               {isOpen && (
-                <ul className="absolute top-full right-0 bg-white p-2 shadow-md border rounded-lg z-10">
+                <ul className="absolute top-full translate-y-1 right-0 bg-white p-2 shadow-md border rounded-lg z-10">
                   <li>
                     <Link
                       to="/profile"
